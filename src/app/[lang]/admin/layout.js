@@ -9,6 +9,7 @@ const sidebarItems = [
   { icon: "group", label: "Quản lý CRM", href: "/leads" },
   { icon: "campaign", label: "Chiến dịch & Webinar", href: "/campaigns" },
   { icon: "article", label: "Quản lý nội dung", href: "/blog" },
+  { icon: "school", label: "Quản lý khóa học", href: "/courses" },
   { icon: "payments", label: "Giao dịch", href: "/transactions" },
 ];
 
