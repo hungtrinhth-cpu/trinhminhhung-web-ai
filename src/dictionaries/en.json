@@ -1,0 +1,11 @@
+{
+  "navigation": {
+    "home": "HOME",
+    "about": "ABOUT ME",
+    "courses": "AI COURSES",
+    "blogs": "BLOGS",
+    "resources": "RESOURCES",
+    "contact": "CONTACT",
+    "portal": "Student Portal"
+  }
+}

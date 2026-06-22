@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Large design/binary files (not needed to run the app)
+*.pdf
+*.zip
+Des/
+mockups/
+z787*.jpg
+z796*.jpg
+Anh Hung.jpg
