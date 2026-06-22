@@ -4,27 +4,35 @@ export default function ZaloPopup({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
+    /* Backdrop — p-3 on mobile recovers horizontal space on 320px devices;
+       overflow-y-auto ensures the card can scroll if the viewport is very short. */
     <div
-      className="fixed inset-0 z-[100] bg-black/40 flex items-center justify-center p-6"
+      className="fixed inset-0 z-[100] bg-black/40 flex items-start sm:items-center justify-center p-3 sm:p-6 overflow-y-auto"
       style={{ animation: "fadeIn 0.3s ease-out" }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
+      {/* Card — max-h + overflow-y-auto so it scrolls on short viewports (667px iPhone SE).
+          p-6 sm:p-10 recovers 16px each side on narrow phones without affecting desktop. */}
       <div
-        className="glass-card w-full max-w-[520px] rounded-2xl relative p-10 shadow-2xl flex flex-col items-center"
+        className="glass-card w-full max-w-[520px] rounded-2xl relative p-6 sm:p-10 shadow-2xl flex flex-col items-center max-h-[calc(100dvh-3rem)] overflow-y-auto my-auto"
         style={{ animation: "scaleIn 0.4s cubic-bezier(0.16,1,0.3,1)" }}
       >
-        {/* Close */}
+        {/* Close — p-3 gives a 44px+ touch area; opacity-60 is discoverable on touch */}
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 text-ink-text opacity-40 hover:opacity-100 transition-opacity p-2"
+          className="absolute top-3 right-3 text-ink-text opacity-60 hover:opacity-100 transition-opacity p-3 rounded-full"
           aria-label="Đóng"
         >
           <span className="material-symbols-outlined text-2xl">close</span>
         </button>
 
         {/* Success Icon */}
-        <div className="mb-5 w-20 h-20 rounded-full bg-primary-container/10 flex items-center justify-center">
-          <span className="material-symbols-outlined text-5xl text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
+        <div className="mb-4 sm:mb-5 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary-container/10 flex items-center justify-center">
+          <span
+            className="material-symbols-outlined text-4xl sm:text-5xl text-primary-container"
+            style={{ fontVariationSettings: "'FILL' 1" }}
+          >
             check_circle
           </span>
         </div>
@@ -35,18 +43,20 @@ export default function ZaloPopup({ isOpen, onClose }) {
         </h2>
 
         {/* Description */}
-        <p className="font-body-lg text-slate-subtext text-center max-w-[380px] mb-8 leading-relaxed">
+        <p className="font-body-lg text-slate-subtext text-center max-w-[380px] mb-6 sm:mb-8 leading-relaxed">
           Quà tặng đã được gửi vào email của bạn. Hãy tham gia nhóm Zalo cộng đồng AI SME để nhận lịch học tập và giao lưu trực tiếp cùng anh Hùng Trịnh.
         </p>
 
-        {/* QR Code */}
-        <div className="mb-8 p-4 rounded-xl border border-primary-container/20 bg-white/50 shadow-inner group">
-          <div className="w-48 h-48 bg-white rounded-lg flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-[1.02]">
-            <span className="material-symbols-outlined text-7xl text-primary-container/30">qr_code_2</span>
+        {/* QR Code — w-36 h-36 on mobile, w-48 h-48 on sm+ to avoid overflowing narrow cards */}
+        <div className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-xl border border-primary-container/20 bg-white/50 shadow-inner group">
+          <div className="w-36 h-36 sm:w-48 sm:h-48 bg-white rounded-lg flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-[1.02]">
+            <span className="material-symbols-outlined text-6xl sm:text-7xl text-primary-container/30">
+              qr_code_2
+            </span>
           </div>
         </div>
 
-        {/* CTA Button */}
+        {/* CTA Button — py-4 ensures 44px+ touch height */}
         <a
           href="#"
           className="w-full py-4 px-8 bg-primary-container text-white font-button-text text-button-text uppercase rounded-full text-center shadow-lg shadow-primary-container/20 hover:scale-[1.02] active:scale-95 transition-all duration-300 flex items-center justify-center gap-3"
@@ -56,13 +66,13 @@ export default function ZaloPopup({ isOpen, onClose }) {
         </a>
 
         {/* Footer label */}
-        <p className="mt-5 font-label-eyebrow text-label-eyebrow text-slate-subtext/50 uppercase tracking-widest">
+        <p className="mt-4 sm:mt-5 font-label-eyebrow text-label-eyebrow text-slate-subtext/50 uppercase tracking-widest">
           AI SME COMMUNITY • HUNG TRINH AI
         </p>
       </div>
 
       <style>{`
-        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes fadeIn  { from { opacity: 0 } to { opacity: 1 } }
         @keyframes scaleIn { from { transform: scale(0.9) translateY(20px); opacity: 0 } to { transform: scale(1) translateY(0); opacity: 1 } }
       `}</style>
     </div>

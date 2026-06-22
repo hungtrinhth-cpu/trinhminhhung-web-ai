@@ -170,7 +170,29 @@ body {
 .hero-sub      { animation: fadeInUp    0.7s cubic-bezier(0.16,1,0.3,1) 0.45s both; }
 .hero-cta      { animation: fadeInUp    0.6s cubic-bezier(0.16,1,0.3,1) 0.6s both; }
 .hero-portrait { animation: fadeInRight 1s   cubic-bezier(0.16,1,0.3,1) 0.2s both; }
-.hero-float    { animation: float 6s ease-in-out infinite; }
+/* Fix #14: promote hero-float to its own compositor layer via will-change so the
+   continuous float animation doesn't trigger main-thread paint on every frame. */
+.hero-float    {
+  animation: float 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Fix #14: respect reduced-motion system preference — disable non-essential animations. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-eyebrow,
+  .hero-headline,
+  .hero-sub,
+  .hero-cta,
+  .hero-portrait {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .hero-float {
+    animation: none;
+    will-change: auto;
+  }
+}
 
 /* ── Scroll-triggered (toggled via JS) ── */
 .reveal {

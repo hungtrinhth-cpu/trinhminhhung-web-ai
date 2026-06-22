@@ -56,10 +56,11 @@ export default function TransactionsPage() {
             className="bg-transparent flex-1 font-body-md text-ink-text placeholder:text-slate-subtext/40 focus:outline-none"
           />
         </div>
+        {/* w-full sm:w-auto: stretch to full width when it wraps on mobile */}
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="glass-card px-4 py-2 rounded-xl border border-border-subtle font-body-md text-ink-text focus:outline-none focus:border-primary-container bg-white"
+          className="w-full sm:w-auto glass-card px-4 py-2 rounded-xl border border-border-subtle font-body-md text-ink-text focus:outline-none focus:border-primary-container bg-white"
         >
           <option value="all">Tất cả trạng thái</option>
           <option value="paid">Đã thanh toán</option>
@@ -72,14 +73,14 @@ export default function TransactionsPage() {
       <div className="space-y-3">
         {filtered.map((tx) => (
           <div key={tx.id} className="glass-card rounded-xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-primary-container/20 transition-all">
-            <div className="flex-1 space-y-1">
+            <div className="flex-1 space-y-1 min-w-0">
               <p className="font-label-eyebrow text-label-eyebrow text-slate-subtext/50 uppercase">ID: #{tx.id}</p>
-              <p className="font-headline-sub text-headline-sub text-ink-text text-sm">{tx.name}</p>
-              <p className="font-body-md text-slate-subtext text-xs">{tx.course} • {tx.time} — {tx.date}</p>
+              <p className="font-headline-sub text-headline-sub text-ink-text text-sm truncate">{tx.name}</p>
+              <p className="font-body-md text-slate-subtext text-xs truncate">{tx.course} • {tx.time} — {tx.date}</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 shrink-0">
               <p className="text-lg font-black text-ink-text">{tx.amount.toLocaleString("vi-VN")}đ</p>
-              <span className={`px-3 py-1 rounded-full text-xs font-bold ${STATUS_STYLES[tx.status]}`}>
+              <span className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${STATUS_STYLES[tx.status]}`}>
                 {STATUS_LABELS[tx.status]}
               </span>
             </div>

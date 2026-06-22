@@ -79,15 +79,15 @@ export default async function WebinarDetailPage({ params }) {
               <div className="space-y-0 border-t border-border-subtle">
                 {curriculum.map((item, index) => (
                   <div key={index} className="py-6 border-b border-border-subtle group cursor-pointer">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <span className="material-symbols-outlined text-secondary group-hover:text-primary-container transition-all duration-300">play_circle</span>
-                        <div>
-                          <h4 className="font-headline-sub text-headline-sub group-hover:text-primary-container transition-colors">{item.title}</h4>
-                          <p className="text-tertiary text-sm mt-1">{item.desc}</p>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4 min-w-0 flex-1">
+                        <span className="material-symbols-outlined text-secondary group-hover:text-primary-container transition-all duration-300 shrink-0">play_circle</span>
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-headline-sub text-headline-sub group-hover:text-primary-container transition-colors truncate">{item.title}</h4>
+                          <p className="text-tertiary text-sm mt-1 truncate sm:whitespace-normal">{item.desc}</p>
                         </div>
                       </div>
-                      <span className="text-tertiary font-label-eyebrow">{item.duration}</span>
+                      <span className="text-tertiary font-label-eyebrow shrink-0">{item.duration}</span>
                     </div>
                   </div>
                 ))}

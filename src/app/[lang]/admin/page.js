@@ -12,10 +12,10 @@ export default async function AdminDashboard({ params }) {
         <p className="font-body-md text-slate-subtext mt-1">Hung Trinh AI — Tháng 6/2026</p>
       </div>
 
-      {/* KPI Cards */}
+      {/* KPI Cards — 2 cols on mobile, 4 on md+; tighter padding on mobile */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter">
         {Object.values(mockStats).map((stat) => (
-          <div key={stat.label} className="glass-card rounded-xl p-6 space-y-2">
+          <div key={stat.label} className="glass-card rounded-xl p-4 sm:p-6 space-y-2">
             <p className="font-label-eyebrow text-label-eyebrow text-slate-subtext/60 uppercase">{stat.label}</p>
             <p className="text-2xl font-black text-ink-text">{stat.value}</p>
             <p className={`font-body-md text-sm flex items-center gap-1 ${stat.trend === "up" ? "text-green-600" : "text-error"}`}>
@@ -30,16 +30,30 @@ export default async function AdminDashboard({ params }) {
         {/* Revenue Chart */}
         <div className="glass-card rounded-xl p-6 space-y-4">
           <h3 className="font-headline-sub text-headline-sub text-ink-text">Doanh thu 6 tháng (triệu đ)</h3>
-          <div className="flex items-end gap-2 h-40">
-            {mockChartData.map((d) => (
-              <div key={d.month} className="flex-1 flex flex-col items-center gap-2">
-                <div
-                  className="w-full bg-primary-container/80 rounded-t-lg transition-all duration-500 hover:bg-primary-container"
-                  style={{ height: `${(d.value / maxChart) * 100}%` }}
-                />
-                <span className="font-label-eyebrow text-label-eyebrow text-slate-subtext/60 uppercase">{d.month}</span>
+          {/* overflow-x-auto + min-w ensures bars never collapse below readable size */}
+          <div className="overflow-x-auto">
+            <div className="flex flex-col gap-2 min-w-[300px]">
+              {/* Bars container */}
+              <div className="flex items-end gap-2 h-32">
+                {mockChartData.map((d) => (
+                  <div key={d.month} className="flex-1 min-w-[32px] h-full flex items-end">
+                    <div
+                      className="w-full bg-primary-container/80 rounded-t-lg transition-all duration-500 hover:bg-primary-container"
+                      style={{ height: `${(d.value / maxChart) * 100}%` }}
+                      title={`${d.value} triệu`}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+              {/* Labels row */}
+              <div className="flex gap-2">
+                {mockChartData.map((d) => (
+                  <span key={d.month} className="flex-1 min-w-[32px] font-label-eyebrow text-label-eyebrow text-slate-subtext/60 uppercase truncate text-center">
+                    {d.month}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -75,14 +89,15 @@ export default async function AdminDashboard({ params }) {
         </div>
         <div className="divide-y divide-border-subtle">
           {mockTransactions.slice(0, 5).map((tx) => (
-            <div key={tx.id} className="flex items-center justify-between px-6 py-4 hover:bg-mist-bg transition-colors">
-              <div>
-                <p className="font-button-text text-ink-text text-sm">{tx.name}</p>
-                <p className="font-body-md text-slate-subtext text-xs">{tx.course} • {tx.time} {tx.date}</p>
+            // Stack vertically on mobile, row on sm+
+            <div key={tx.id} className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-4 gap-3 hover:bg-mist-bg transition-colors">
+              <div className="min-w-0">
+                <p className="font-button-text text-ink-text text-sm truncate">{tx.name}</p>
+                <p className="font-body-md text-slate-subtext text-xs truncate">{tx.course} • {tx.time} {tx.date}</p>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 shrink-0">
                 <p className="font-button-text text-ink-text">{tx.amount.toLocaleString("vi-VN")}đ</p>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                <span className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${
                   tx.status === "paid" ? "bg-primary-container/10 text-primary-container" :
                   tx.status === "pending" ? "bg-secondary/10 text-secondary" :
                   "bg-error/10 text-error"

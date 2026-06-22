@@ -36,9 +36,10 @@ export default function LessonDetailPage({ params }) {
   };
 
   return (
-    <div className="flex gap-0 -m-8 min-h-[calc(100vh-120px)]">
-      {/* Icon-only sidebar for lessons */}
-      <div className="w-20 shrink-0 bg-pure-white border-r border-border-subtle overflow-y-auto flex flex-col items-center py-4 gap-1 hidden md:flex">
+    // Remove -m-8 on mobile (only apply the bleed on md+) so we don't overflow small screens
+    <div className="flex flex-col md:flex-row gap-0 md:-m-8 min-h-[calc(100vh-120px)]">
+      {/* ── Icon-only lesson sidebar — desktop only ── */}
+      <div className="w-20 shrink-0 bg-pure-white border-r border-border-subtle overflow-y-auto flex-col items-center py-4 gap-1 hidden md:flex">
         {lessons.map((lesson) => {
           const isActive = String(activeLesson) === lesson.id;
           return (
@@ -61,7 +62,7 @@ export default function LessonDetailPage({ params }) {
               >
                 {lesson.completed ? "check_circle" : "play_circle"}
               </span>
-              {/* Tooltip */}
+              {/* Tooltip — shown on hover (touch devices use the tab panel instead) */}
               <div className="absolute left-14 z-50 hidden group-hover:block bg-ink-text text-white text-xs rounded-lg px-3 py-2 w-48 pointer-events-none shadow-xl">
                 Bài {lesson.id}: {lesson.title}
               </div>
@@ -70,18 +71,44 @@ export default function LessonDetailPage({ params }) {
         })}
       </div>
 
-      {/* Main: Video (60%) + Tab Panel (40%) */}
+      {/* ── Mobile lesson pill row ── */}
+      <div className="flex md:hidden overflow-x-auto gap-2 px-4 py-3 bg-pure-white border-b border-border-subtle sticky top-[57px] z-20">
+        {lessons.map((lesson) => {
+          const isActive = String(activeLesson) === lesson.id;
+          return (
+            <button
+              key={lesson.id}
+              onClick={() => setActiveLesson(Number(lesson.id))}
+              className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${
+                isActive
+                  ? "bg-primary-container text-white border-primary-container"
+                  : "bg-pure-white text-slate-subtext border-border-subtle hover:border-primary-container/40"
+              }`}
+            >
+              <span
+                className="material-symbols-outlined text-sm"
+                style={{ fontVariationSettings: lesson.completed ? "'FILL' 1" : "'FILL' 0" }}
+              >
+                {lesson.completed ? "check_circle" : "play_circle"}
+              </span>
+              Bài {lesson.id}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── Main: Video + Tab Panel ── */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        {/* Video Area — 60% */}
-        <div className="flex-1 p-6 space-y-4 overflow-y-auto">
-          {/* YouTube Embed */}
-          <div className="aspect-video bg-ink-text rounded-xl overflow-hidden relative">
+        {/* Video Area */}
+        <div className="flex-1 p-4 md:p-6 space-y-4 overflow-y-auto">
+          {/* YouTube Embed — padding-bottom trick for universal aspect-ratio support */}
+          <div className="relative w-full min-h-[200px] rounded-xl overflow-hidden bg-ink-text" style={{ paddingBottom: "56.25%" }}>
             <iframe
               src={`https://www.youtube.com/embed/${currentLesson?.videoId || "dQw4w9WgXcQ"}?rel=0&modestbranding=1`}
               title={currentLesson?.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-              className="w-full h-full"
+              className="absolute inset-0 w-full h-full"
             />
           </div>
 
@@ -93,8 +120,8 @@ export default function LessonDetailPage({ params }) {
             <p className="font-body-md text-slate-subtext">{currentLesson?.description}</p>
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-3">
+          {/* Actions — flex-wrap so buttons stack on very narrow screens */}
+          <div className="flex flex-wrap gap-3">
             <button className="bg-primary-container text-white px-5 py-2.5 rounded-full font-button-text text-button-text text-sm hover:scale-105 transition-transform flex items-center gap-2">
               <span className="material-symbols-outlined text-sm">check</span>
               Đánh dấu hoàn thành
@@ -106,24 +133,26 @@ export default function LessonDetailPage({ params }) {
           </div>
         </div>
 
-        {/* Tab Panel — 40% */}
-        <div className="w-full md:w-[40%] md:min-w-[340px] border-l border-border-subtle flex flex-col">
-          {/* Tabs */}
+        {/* Tab Panel */}
+        <div className="w-full md:w-[40%] md:min-w-[340px] border-t md:border-t-0 md:border-l border-border-subtle flex flex-col">
+          {/* Tabs — shortened labels on very small screens to prevent overflow */}
           <div className="flex border-b border-border-subtle shrink-0">
             {[
-              { id: "content", label: "NỘI DUNG KHÓA HỌC" },
-              { id: "ai", label: "TRỢ LÝ AI HỌC TẬP" },
+              { id: "content", labelFull: "NỘI DUNG KHÓA HỌC", labelShort: "NỘI DUNG" },
+              { id: "ai", labelFull: "TRỢ LÝ AI HỌC TẬP", labelShort: "TRỢ LÝ AI" },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 py-4 font-label-eyebrow text-label-eyebrow uppercase transition-all ${
+                className={`flex-1 py-4 font-label-eyebrow text-label-eyebrow uppercase transition-all overflow-hidden text-ellipsis whitespace-nowrap px-2 ${
                   activeTab === tab.id
                     ? "text-primary-container border-b-2 border-primary-container bg-primary-container/5"
                     : "text-slate-subtext hover:text-ink-text"
                 }`}
               >
-                {tab.label}
+                {/* Show abbreviated label on small screens, full label on sm+ */}
+                <span className="sm:hidden">{tab.labelShort}</span>
+                <span className="hidden sm:inline">{tab.labelFull}</span>
               </button>
             ))}
           </div>
@@ -144,7 +173,7 @@ export default function LessonDetailPage({ params }) {
                     }`}
                   >
                     <span
-                      className={`material-symbols-outlined text-lg ${
+                      className={`material-symbols-outlined text-lg shrink-0 ${
                         lesson.completed ? "text-green-500" : isActive ? "text-primary-container" : "text-slate-subtext/30"
                       }`}
                       style={{ fontVariationSettings: lesson.completed ? "'FILL' 1" : "'FILL' 0" }}

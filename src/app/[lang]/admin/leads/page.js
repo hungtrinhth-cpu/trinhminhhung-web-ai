@@ -86,8 +86,15 @@ export default function LeadsKanban() {
         </button>
       </div>
 
-      {/* Kanban Board */}
-      <div className="flex gap-4 overflow-x-auto pb-4">
+      {/* Kanban Board
+          Note: HTML5 drag-and-drop does not fire on iOS Safari (touch events only).
+          For production, replace draggable/onDragStart with a touch-capable
+          library such as @dnd-kit/core which supports both mouse and touch input.
+          The WebkitOverflowScrolling style keeps momentum scrolling on iOS. */}
+      <div
+        className="flex gap-4 overflow-x-auto pb-4"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
         {mockPipelineStages.map((stage) => {
           const stageLeads = leads.filter((l) => l.stage === stage.id);
           const isOver = dragOver === stage.id;

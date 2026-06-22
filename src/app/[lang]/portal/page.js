@@ -36,7 +36,7 @@ export default async function PortalHome({ params }) {
   return (
     <div className="space-y-8">
       {/* Welcome */}
-      <div className="glass-card p-8 rounded-xl">
+      <div className="glass-card p-6 md:p-8 rounded-xl">
         <h1 className="font-headline-section text-headline-section-mobile text-ink-text mb-2">
           Chào mừng trở lại! 👋
         </h1>
@@ -45,15 +45,15 @@ export default async function PortalHome({ params }) {
         </p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+      {/* Stats — 2 cols on mobile, 4 on md+ */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter">
         {[
           { icon: "school", label: "Khóa học", value: "3" },
           { icon: "check_circle", label: "Hoàn thành", value: "12/24" },
           { icon: "timer", label: "Giờ học", value: "18h" },
           { icon: "emoji_events", label: "Chứng chỉ", value: "1" },
         ].map((stat) => (
-          <div key={stat.label} className="glass-card p-6 rounded-xl text-center">
+          <div key={stat.label} className="glass-card p-4 sm:p-6 rounded-xl text-center">
             <span className="material-symbols-outlined text-3xl text-primary-container mb-2">{stat.icon}</span>
             <div className="text-2xl font-black text-ink-text">{stat.value}</div>
             <div className="font-body-md text-slate-subtext text-sm">{stat.label}</div>

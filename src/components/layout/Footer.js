@@ -11,9 +11,10 @@ export default function Footer({ lang }) {
             <p className="font-headline-sub text-headline-sub text-pure-white">Đăng ký nhận kiến thức AI miễn phí</p>
             <p className="font-body-md text-pure-white/50 mt-1">Mỗi tuần một bài học AI thực chiến, gửi thẳng vào hộp thư của bạn.</p>
           </div>
+          {/* Fix 1: input gets pr-24 so text never slides under the absolute button */}
           <div className="relative w-full md:w-[380px] shrink-0">
             <input
-              className="w-full bg-white/5 border border-white/15 rounded-full px-6 py-4 font-body-md text-pure-white placeholder:text-white/30 focus:outline-none focus:border-primary-container transition-all"
+              className="w-full bg-white/5 border border-white/15 rounded-full px-6 pr-24 py-4 font-body-md text-pure-white placeholder:text-white/30 focus:outline-none focus:border-primary-container transition-all"
               placeholder="Email của bạn"
               type="email"
             />
@@ -25,8 +26,9 @@ export default function Footer({ lang }) {
       </div>
 
       {/* Main columns */}
+      {/* Fix 2: grid-cols-1 sm:grid-cols-2 md:grid-cols-4 for 1→2→4 column breakpoints */}
       <div className="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
 
           {/* Col 1 — Brand */}
           <div className="space-y-5">
@@ -34,7 +36,8 @@ export default function Footer({ lang }) {
             <p className="font-body-md text-pure-white/50 leading-relaxed max-w-xs">
               Kiến tạo tương lai cùng trí tuệ nhân tạo. Đào tạo, chuyển giao và vận hành AI chuyên nghiệp cho doanh nghiệp SME Việt Nam.
             </p>
-            <div className="flex gap-3 pt-2">
+            {/* Fix 3: flex-wrap gap-2 md:gap-3 so icons wrap on 320px instead of clipping */}
+            <div className="flex flex-wrap gap-2 md:gap-3 pt-2">
               {/* Facebook */}
               <a href="#" title="Facebook" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-200" style={{ background: "#1877F2" }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073C24 5.404 18.627 0 12 0S0 5.404 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
@@ -107,7 +110,8 @@ export default function Footer({ lang }) {
             ].map((item) => (
               <div key={item.text} className="flex items-start gap-3">
                 <span className="material-symbols-outlined text-primary-container text-[18px] mt-0.5 shrink-0">{item.icon}</span>
-                <span className="font-body-md text-pure-white/50">{item.text}</span>
+                {/* Fix 5: break-words + min-w-0 guards against long email/domain overflow */}
+                <span className="font-body-md text-pure-white/50 break-words min-w-0">{item.text}</span>
               </div>
             ))}
           </div>
@@ -116,10 +120,13 @@ export default function Footer({ lang }) {
       </div>
 
       {/* Bottom bar */}
+      {/* Fix 2 & 3: sm:flex-row so horizontal layout kicks in at 640px, not just 768px */}
       <div className="border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop py-6 flex flex-col md:flex-row justify-between items-center gap-3">
-          <p className="font-body-md text-pure-white/30 text-sm">© 2026 Hung Trinh AI. All rights reserved.</p>
-          <p className="font-label-eyebrow text-label-eyebrow text-pure-white/20 uppercase tracking-widest">
+        <div className="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop py-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+          {/* Fix 2: text-center on mobile, text-left on sm+ */}
+          <p className="font-body-md text-pure-white/30 text-sm text-center sm:text-left">© 2026 Hung Trinh AI. All rights reserved.</p>
+          {/* Fix 3: tracking-wide on mobile to prevent overflow, tracking-widest restored on sm+; text-center + break-words */}
+          <p className="font-label-eyebrow text-label-eyebrow text-pure-white/20 uppercase tracking-wide sm:tracking-widest text-center sm:text-right break-words">
             AI Training • Consulting • Automation
           </p>
         </div>
