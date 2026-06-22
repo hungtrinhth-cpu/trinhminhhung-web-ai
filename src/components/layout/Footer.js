@@ -26,9 +26,8 @@ export default function Footer({ lang }) {
       </div>
 
       {/* Main columns */}
-      {/* Fix 2: grid-cols-1 sm:grid-cols-2 md:grid-cols-4 for 1→2→4 column breakpoints */}
-      <div className="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
+      <div className="max-w-7xl mx-auto px-container-padding-mobile md:px-12 lg:px-16 xl:px-container-padding-desktop py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
 
           {/* Col 1 — Brand */}
           <div className="space-y-5">
@@ -36,8 +35,8 @@ export default function Footer({ lang }) {
             <p className="font-body-md text-pure-white/50 leading-relaxed max-w-xs">
               Kiến tạo tương lai cùng trí tuệ nhân tạo. Đào tạo, chuyển giao và vận hành AI chuyên nghiệp cho doanh nghiệp SME Việt Nam.
             </p>
-            {/* Fix 3: flex-wrap gap-2 md:gap-3 so icons wrap on 320px instead of clipping */}
-            <div className="flex flex-wrap gap-2 md:gap-3 pt-2">
+            {/* Social Icons Container — flex-nowrap to keep icons on a single line */}
+            <div className="flex flex-nowrap gap-2.5 pt-2">
               {/* Facebook */}
               <a href="#" title="Facebook" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-200" style={{ background: "#1877F2" }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073C24 5.404 18.627 0 12 0S0 5.404 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
@@ -110,8 +109,8 @@ export default function Footer({ lang }) {
             ].map((item) => (
               <div key={item.text} className="flex items-start gap-3">
                 <span className="material-symbols-outlined text-primary-container text-[18px] mt-0.5 shrink-0">{item.icon}</span>
-                {/* Fix 5: break-words + min-w-0 guards against long email/domain overflow */}
-                <span className="font-body-md text-pure-white/50 break-words min-w-0">{item.text}</span>
+                {/* whitespace-nowrap guarantees that email, phone, and time never wrap to the next line */}
+                <span className="font-body-md text-pure-white/50 whitespace-nowrap">{item.text}</span>
               </div>
             ))}
           </div>
