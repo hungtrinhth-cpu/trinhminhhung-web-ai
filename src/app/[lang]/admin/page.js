@@ -59,7 +59,12 @@ export default async function AdminDashboard({ params }) {
 
         {/* Campaign Performance */}
         <div className="glass-card rounded-xl p-6 space-y-5">
-          <h3 className="font-headline-sub text-headline-sub text-ink-text">Hiệu suất chiến dịch</h3>
+          <div className="flex justify-between items-center">
+            <h3 className="font-headline-sub text-headline-sub text-ink-text">Hiệu suất chiến dịch</h3>
+            <Link href={`/${lang}/admin/campaigns`} className="font-button-text text-button-text text-primary-container text-sm hover:underline">
+              Quản lý Email
+            </Link>
+          </div>
           <div className="space-y-4">
             {mockCampaigns.map((c) => (
               <div key={c.name} className="space-y-1.5">
