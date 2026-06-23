@@ -36,10 +36,10 @@ export default async function Home({ params }) {
                 Reduced mb-8 → mb-4 md:mb-8 to recover vertical space on small phones.
               */}
               <h1 className="hero-headline font-headline-hero text-[28px] sm:text-headline-hero-mobile md:text-headline-hero text-ink-text leading-tight mb-4 md:mb-8">
-                ĐÀO TẠO<span className="text-primary-container">+</span><br />
-                CHUYỂN GIAO<span className="text-primary-container">+</span><br />
-                VẬN HÀNH<span className="text-primary-container">+</span><br />
-                AI<span className="text-primary-container">+</span>
+                ĐÀO TẠO<span className="text-visun-orange">+</span><br />
+                CHUYỂN GIAO<span className="text-visun-orange">+</span><br />
+                VẬN HÀNH<span className="text-visun-orange">+</span><br />
+                AI<span className="text-visun-orange">+</span>
               </h1>
               {/*
                 Reduced mb-10 → mb-6 md:mb-10 to recover vertical space on mobile.
@@ -64,7 +64,7 @@ export default async function Home({ params }) {
               to zero height on mobile (grid-cols-1 stacks text above, portrait below).
               The portrait is still shown on mobile — it just needs a declared height.
             */}
-            <div className="hero-portrait md:col-span-4 relative flex items-end justify-end min-h-[320px] sm:min-h-[420px]">
+            <div className="hero-portrait md:col-span-4 relative flex items-end justify-end min-h-[260px] sm:min-h-[380px] md:min-h-[420px]">
               {/*
                 Fix #1 cont. + Fix #4: remove translate-y-12 on mobile (was pushing image
                 below the viewport). Add overflow-hidden to contain the w-[120%] decorative
@@ -107,7 +107,7 @@ export default async function Home({ params }) {
         </header>
 
         {/* ── Courses ── */}
-        <section className="py-section-gap bg-pure-white" id="khoa-hoc">
+        <section className="py-16 md:py-section-gap bg-pure-white" id="khoa-hoc">
           <div className="container mx-auto px-container-padding-mobile md:px-container-padding-desktop">
             {/*
               Fix #9: items-start on mobile so the section title left-aligns correctly
@@ -138,17 +138,17 @@ export default async function Home({ params }) {
                 { icon: "brush", badge: "CREATIVE", title: "Generative AI trong Marketing & Design", desc: "Ứng dụng Midjourney, Canva AI và các công cụ sáng tạo để đột phá hình ảnh thương hiệu.", lessons: "15 Bài học", featured: false },
               ].map((course, i) => (
                 <AnimateIn key={course.badge} delay={i * 100}>
-                  <div className={`glass-card p-8 rounded-xl flex flex-col group hover:border-primary-container/50 hover:-translate-y-2 hover:shadow-xl hover:shadow-primary-container/10 transition-all duration-500 h-full ${course.featured ? "border-primary-container/20 shadow-xl shadow-primary-container/5" : ""}`}>
-                    <div className="w-14 h-14 rounded-lg bg-primary-container/10 flex items-center justify-center mb-6 text-primary-container group-hover:scale-110 group-hover:bg-primary-container/20 transition-all duration-300">
+                  <div className={`glass-card p-8 rounded-xl flex flex-col group hover:border-visun-orange/40 hover:-translate-y-2 hover:shadow-xl hover:shadow-visun-orange/10 transition-all duration-500 h-full ${course.featured ? "border-visun-blue/20 shadow-xl shadow-visun-blue/5" : ""}`}>
+                    <div className="w-14 h-14 rounded-lg bg-visun-blue/10 flex items-center justify-center mb-6 text-visun-blue group-hover:scale-110 group-hover:bg-visun-blue/20 transition-all duration-300">
                       <span className="material-symbols-outlined text-3xl">{course.icon}</span>
                     </div>
-                    <span className="font-label-eyebrow text-label-eyebrow text-primary-container mb-2">{course.badge}</span>
-                    <h3 className="font-headline-sub text-headline-sub mb-4 group-hover:text-primary-container transition-colors duration-300">{course.title}</h3>
+                    <span className="font-label-eyebrow text-label-eyebrow text-visun-orange mb-2">{course.badge}</span>
+                    <h3 className="font-headline-sub text-headline-sub mb-4 group-hover:text-visun-blue transition-colors duration-300">{course.title}</h3>
                     <p className="font-body-md text-slate-subtext mb-8 flex-grow">{course.desc}</p>
                     <hr className="border-border-subtle mb-6" />
                     <div className="flex justify-between items-center">
                       <span className="font-button-text text-button-text text-ink-text">{course.lessons}</span>
-                      <button className="w-10 h-10 rounded-full bg-primary-container/10 text-primary-container flex items-center justify-center group-hover:bg-primary-container group-hover:text-white transition-all duration-300">
+                      <button className="w-10 h-10 rounded-full bg-visun-orange/10 text-visun-orange flex items-center justify-center group-hover:bg-visun-orange group-hover:text-white transition-all duration-300">
                         <span className="material-symbols-outlined text-sm">north_east</span>
                       </button>
                     </div>
@@ -156,6 +156,34 @@ export default async function Home({ params }) {
                 </AnimateIn>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ── CTA Banner ── */}
+        <section className="section-blue-banner py-14 md:py-24">
+          <div className="container mx-auto px-container-padding-mobile md:px-container-padding-desktop">
+            <AnimateIn className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
+              <div className="max-w-xl">
+                <p className="font-label-eyebrow text-label-eyebrow text-sunrise uppercase tracking-[0.2em] mb-4">
+                  AI THỰC CHIẾN CHO DOANH NGHIỆP VIỆT
+                </p>
+                <h2 className="font-headline-section text-headline-section-mobile md:text-headline-section text-pure-white leading-tight mb-4">
+                  Sẵn sàng đưa AI vào vận hành doanh nghiệp?
+                </h2>
+                <p className="font-body-lg text-pure-white/70 leading-relaxed">
+                  Đặt lịch tư vấn miễn phí — chúng tôi phân tích nhu cầu và đề xuất lộ trình AI phù hợp với doanh nghiệp của bạn.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4 shrink-0">
+                <Button variant="primary" className="whitespace-nowrap">ĐĂNG KÝ TƯ VẤN</Button>
+                <a
+                  href="#khoa-hoc"
+                  className="inline-flex items-center justify-center gap-2 rounded-full font-button-text text-button-text border-2 border-white/30 text-white px-10 py-5 hover:border-white hover:bg-white/10 transition-all duration-300 whitespace-nowrap"
+                >
+                  XEM KHÓA HỌC
+                </a>
+              </div>
+            </AnimateIn>
           </div>
         </section>
 
@@ -182,14 +210,14 @@ export default async function Home({ params }) {
                       style={{ backgroundImage: "url('/anh-hung.jpg')" }}
                     />
                   </div>
-                  <div className="absolute -top-10 -left-10 w-40 h-40 border-2 border-primary-container/20 rounded-full -z-0 animate-[spin_20s_linear_infinite]" />
-                  <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-primary-container/5 rounded-full blur-3xl -z-0" />
+                  <div className="absolute -top-10 -left-10 w-40 h-40 border-2 border-visun-blue/20 rounded-full -z-0 animate-[spin_20s_linear_infinite]" />
+                  <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-visun-orange/5 rounded-full blur-3xl -z-0" />
                 </div>
               </AnimateIn>
 
               <AnimateIn delay={150}>
                 <div className="flex flex-col">
-                  <span className="font-label-eyebrow text-label-eyebrow text-primary-container mb-4 tracking-[0.2em] uppercase">Về tôi</span>
+                  <span className="font-label-eyebrow text-label-eyebrow text-visun-orange mb-4 tracking-[0.2em] uppercase">Về tôi</span>
                   <h2 className="font-headline-section text-headline-section-mobile md:text-headline-section text-ink-text mb-8 leading-tight">
                     Sứ mệnh đồng hành cùng kỷ nguyên trí tuệ nhân tạo
                   </h2>
@@ -213,7 +241,7 @@ export default async function Home({ params }) {
                         */
                         <div key={stat.label} className="group overflow-hidden">
                           <div
-                            className="text-headline-section font-black text-primary-container mb-1 group-hover:scale-110 transition-transform duration-300 inline-block"
+                            className="text-headline-section font-black text-visun-blue mb-1 group-hover:scale-110 transition-transform duration-300 inline-block"
                             style={{ willChange: "transform" }}
                           >
                             {stat.value}

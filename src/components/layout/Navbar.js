@@ -387,10 +387,9 @@ export default function Navbar({ dict, lang, mode = "public" }) {
             </Link>
             <button
               onClick={() => setShowConsult(true)}
-              className="font-button-text text-button-text uppercase tracking-widest transition-colors px-4 py-2 rounded-full border border-visun-blue/30 hover:bg-visun-blue hover:text-white"
-              style={{ color: "#1A56A8" }}
+              className="font-button-text text-button-text uppercase tracking-widest transition-all px-5 py-2 rounded-full bg-visun-orange text-white hover:bg-sunset"
             >
-              NHẬN TƯ VẤN
+              ĐĂNG KÝ TƯ VẤN
             </button>
           </div>
 
@@ -407,7 +406,7 @@ export default function Navbar({ dict, lang, mode = "public" }) {
             {/* Portal CTA — responsive label + padding */}
             <Link
               href={`/${lang}/portal`}
-              className="hidden sm:inline-block bg-primary-container text-white rounded-full font-button-text text-button-text hover:scale-105 transition-transform duration-300 active:scale-95 px-6 py-3"
+              className="hidden sm:inline-block bg-visun-blue text-white rounded-full font-button-text text-button-text hover:bg-deep-blue hover:scale-105 transition-all duration-300 active:scale-95 px-6 py-3 shadow-md shadow-visun-blue/20"
             >
               {dict?.navigation?.portal ?? "VÀO CỔNG HỌC VIÊN"}
             </Link>
@@ -494,15 +493,14 @@ export default function Navbar({ dict, lang, mode = "public" }) {
           <div className="mt-4 flex flex-col gap-3">
             <button
               onClick={() => { closeMenu(); setShowConsult(true); }}
-              className="w-full py-4 rounded-full border border-visun-blue/30 font-button-text text-button-text uppercase tracking-widest transition-colors hover:bg-visun-blue hover:text-white"
-              style={{ color: "#1A56A8" }}
+              className="w-full py-4 rounded-full bg-visun-orange text-white font-button-text text-button-text uppercase tracking-widest transition-colors hover:bg-sunset"
             >
-              NHẬN TƯ VẤN MIỄN PHÍ
+              ĐĂNG KÝ TƯ VẤN
             </button>
             <Link
               href={`/${lang}/portal`}
               onClick={closeMenu}
-              className="w-full py-4 rounded-full bg-primary-container text-white font-button-text text-button-text uppercase tracking-widest text-center hover:opacity-90 transition-opacity"
+              className="w-full py-4 rounded-full bg-visun-blue text-white font-button-text text-button-text uppercase tracking-widest text-center hover:bg-deep-blue transition-colors"
             >
               {dict?.navigation?.portal ?? "VÀO CỔNG HỌC VIÊN"}
             </Link>

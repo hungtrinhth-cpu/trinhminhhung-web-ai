@@ -2,23 +2,23 @@ import Link from "next/link";
 
 export default function Footer({ lang }) {
   return (
-    <footer className="w-full bg-ink-text text-pure-white">
+    <footer className="w-full section-blue-banner text-pure-white">
 
       {/* Newsletter bar */}
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop py-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <p className="font-headline-sub text-headline-sub text-pure-white">Đăng ký nhận kiến thức AI miễn phí</p>
-            <p className="font-body-md text-pure-white/50 mt-1">Mỗi tuần một bài học AI thực chiến, gửi thẳng vào hộp thư của bạn.</p>
+            <p className="font-body-md text-white/70 mt-1">Mỗi tuần một bài học AI thực chiến, gửi thẳng vào hộp thư của bạn.</p>
           </div>
           {/* Fix 1: input gets pr-24 so text never slides under the absolute button */}
           <div className="relative w-full md:w-[380px] shrink-0">
             <input
-              className="w-full bg-white/5 border border-white/15 rounded-full px-6 pr-24 py-4 font-body-md text-pure-white placeholder:text-white/30 focus:outline-none focus:border-primary-container transition-all"
+              className="w-full bg-white/5 border border-white/15 rounded-full px-6 pr-24 py-4 font-body-md text-pure-white placeholder:text-white/30 focus:outline-none focus:border-white/40 transition-all"
               placeholder="Email của bạn"
               type="email"
             />
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary-container text-white px-6 py-2.5 rounded-full font-button-text text-button-text hover:scale-105 transition-transform active:scale-95">
+            <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-visun-orange text-white px-6 py-2.5 rounded-full font-button-text text-button-text hover:bg-sunset hover:scale-105 transition-all active:scale-95">
               GỬI
             </button>
           </div>
@@ -32,7 +32,7 @@ export default function Footer({ lang }) {
           {/* Col 1 — Brand */}
           <div className="space-y-5">
             <div className="font-headline-sub text-headline-sub font-black text-pure-white">Hung Trinh AI</div>
-            <p className="font-body-md text-pure-white/50 leading-relaxed max-w-xs">
+            <p className="font-body-md text-white/70 leading-relaxed max-w-xs">
               Kiến tạo tương lai cùng trí tuệ nhân tạo. Đào tạo, chuyển giao và vận hành AI chuyên nghiệp cho doanh nghiệp SME Việt Nam.
             </p>
             {/* Social Icons Container — flex-nowrap to keep icons on a single line */}
@@ -62,7 +62,7 @@ export default function Footer({ lang }) {
 
           {/* Col 2 — Dịch vụ */}
           <div className="space-y-4">
-            <h4 className="font-button-text text-button-text text-primary-container uppercase tracking-widest">Dịch vụ</h4>
+            <h4 className="font-button-text text-button-text text-sunrise uppercase tracking-widest">Dịch vụ</h4>
             {[
               { label: "Đào tạo AI nội bộ", href: `/${lang}/khoa-hoc` },
               { label: "Chuyển giao công nghệ", href: `/${lang}/khoa-hoc` },
@@ -72,7 +72,7 @@ export default function Footer({ lang }) {
               <Link
                 key={item.label}
                 href={item.href}
-                className="block font-body-md text-pure-white/50 hover:text-pure-white transition-colors"
+                className="block font-body-md text-white/70 hover:text-sunrise transition-colors"
               >
                 {item.label}
               </Link>
@@ -81,7 +81,7 @@ export default function Footer({ lang }) {
 
           {/* Col 3 — Hỗ trợ */}
           <div className="space-y-4">
-            <h4 className="font-button-text text-button-text text-primary-container uppercase tracking-widest">Hỗ trợ</h4>
+            <h4 className="font-button-text text-button-text text-sunrise uppercase tracking-widest">Hỗ trợ</h4>
             {[
               { label: "Chính sách bảo mật", href: `/${lang}/privacy` },
               { label: "Điều khoản dịch vụ", href: `/${lang}/terms` },
@@ -91,7 +91,7 @@ export default function Footer({ lang }) {
               <Link
                 key={item.label}
                 href={item.href}
-                className="block font-body-md text-pure-white/50 hover:text-pure-white transition-colors"
+                className="block font-body-md text-white/70 hover:text-sunrise transition-colors"
               >
                 {item.label}
               </Link>
@@ -100,7 +100,7 @@ export default function Footer({ lang }) {
 
           {/* Col 4 — Liên hệ */}
           <div className="space-y-4">
-            <h4 className="font-button-text text-button-text text-primary-container uppercase tracking-widest">Hung Trinh AI</h4>
+            <h4 className="font-button-text text-button-text text-sunrise uppercase tracking-widest">Hung Trinh AI</h4>
             {[
               { icon: "location_on", text: "Hà Nội, Việt Nam" },
               { icon: "mail", text: "contact.visun@gmail.com" },
@@ -108,9 +108,8 @@ export default function Footer({ lang }) {
               { icon: "schedule", text: "Thứ 2 – Thứ 6, 8:00 – 17:00" },
             ].map((item) => (
               <div key={item.text} className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-primary-container text-[18px] mt-0.5 shrink-0">{item.icon}</span>
-                {/* whitespace-nowrap guarantees that email, phone, and time never wrap to the next line */}
-                <span className="font-body-md text-pure-white/50 whitespace-nowrap">{item.text}</span>
+                <span className="material-symbols-outlined text-sunrise text-[18px] mt-0.5 shrink-0">{item.icon}</span>
+                <span className="font-body-md text-white/70 whitespace-nowrap">{item.text}</span>
               </div>
             ))}
           </div>
@@ -123,9 +122,8 @@ export default function Footer({ lang }) {
       <div className="border-t border-white/5">
         <div className="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop py-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           {/* Fix 2: text-center on mobile, text-left on sm+ */}
-          <p className="font-body-md text-pure-white/30 text-sm text-center sm:text-left">© 2026 Hung Trinh AI. All rights reserved.</p>
-          {/* Fix 3: tracking-wide on mobile to prevent overflow, tracking-widest restored on sm+; text-center + break-words */}
-          <p className="font-label-eyebrow text-label-eyebrow text-pure-white/20 uppercase tracking-wide sm:tracking-widest text-center sm:text-right break-words">
+          <p className="font-body-md text-white/50 text-sm text-center sm:text-left">© 2026 Hung Trinh AI. All rights reserved.</p>
+          <p className="font-label-eyebrow text-label-eyebrow text-white/40 uppercase tracking-wide sm:tracking-widest text-center sm:text-right break-words">
             AI Training • Consulting • Automation
           </p>
         </div>
