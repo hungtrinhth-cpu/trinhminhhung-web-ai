@@ -286,12 +286,22 @@ export default function Navbar({ dict, lang, mode = "public" }) {
   // ─────────────────────────────────────────────
   // PUBLIC MODE
   // ─────────────────────────────────────────────
-  const courseItems = [
-    { label: "ĐÀO TẠO DOANH NGHIỆP", href: `/${lang}/khoa-hoc` },
-    { label: "KHOÁ HỌC AI CHO CÁ NHÂN", href: `/${lang}/khoa-hoc` },
-    { label: "KHOÁ HỌC E-LEARNING", href: `/${lang}/khoa-hoc` },
-    { label: "HỌC LIỆU SỐ", href: `/${lang}/tai-lieu` },
+  const courseItemHrefs = [
+    `/${lang}/khoa-hoc`,
+    `/${lang}/khoa-hoc`,
+    `/${lang}/khoa-hoc`,
+    `/${lang}/tai-lieu`,
   ];
+  const courseItemLabels = dict?.navigation?.course_items ?? [
+    "ĐÀO TẠO DOANH NGHIỆP",
+    "KHOÁ HỌC AI CHO CÁ NHÂN",
+    "KHOÁ HỌC E-LEARNING",
+    "HỌC LIỆU SỐ",
+  ];
+  const courseItems = courseItemLabels.map((label, i) => ({
+    label,
+    href: courseItemHrefs[i],
+  }));
 
   return (
     <>
@@ -389,7 +399,7 @@ export default function Navbar({ dict, lang, mode = "public" }) {
               onClick={() => setShowConsult(true)}
               className="font-button-text text-button-text uppercase tracking-widest transition-all px-5 py-2 rounded-full bg-visun-orange text-white hover:bg-sunset"
             >
-              ĐĂNG KÝ TƯ VẤN
+              {dict?.navigation?.consult ?? "ĐĂNG KÝ TƯ VẤN"}
             </button>
           </div>
 
@@ -400,7 +410,7 @@ export default function Navbar({ dict, lang, mode = "public" }) {
               onClick={toggleLang}
               className="hidden md:inline font-button-text text-button-text opacity-60 hover:opacity-100"
             >
-              {lang === "vi" ? "EN | VI" : "VI | EN"}
+              {lang === "vi" ? "EN" : "VI"}
             </button>
 
             {/* Portal CTA — responsive label + padding */}
@@ -495,7 +505,7 @@ export default function Navbar({ dict, lang, mode = "public" }) {
               onClick={() => { closeMenu(); setShowConsult(true); }}
               className="w-full py-4 rounded-full bg-visun-orange text-white font-button-text text-button-text uppercase tracking-widest transition-colors hover:bg-sunset"
             >
-              ĐĂNG KÝ TƯ VẤN
+              {dict?.navigation?.consult ?? "ĐĂNG KÝ TƯ VẤN"}
             </button>
             <Link
               href={`/${lang}/portal`}
@@ -512,7 +522,7 @@ export default function Navbar({ dict, lang, mode = "public" }) {
               onClick={() => { toggleLang(); closeMenu(); }}
               className="font-button-text text-button-text opacity-60 hover:opacity-100 py-2 transition-opacity"
             >
-              {lang === "vi" ? "EN | VI" : "VI | EN"}
+              {lang === "vi" ? "EN" : "VI"}
             </button>
           </div>
         </div>

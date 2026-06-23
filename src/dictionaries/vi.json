@@ -6,6 +6,101 @@
     "blogs": "BLOGS",
     "resources": "THƯ VIỆN",
     "contact": "LIÊN HỆ",
-    "portal": "Vào Cổng Học Viên"
+    "portal": "Vào Cổng Học Viên",
+    "consult": "ĐĂNG KÝ TƯ VẤN",
+    "scroll": "Cuộn xuống",
+    "course_items": [
+      "ĐÀO TẠO DOANH NGHIỆP",
+      "KHOÁ HỌC AI CHO CÁ NHÂN",
+      "KHOÁ HỌC E-LEARNING",
+      "HỌC LIỆU SỐ"
+    ]
+  },
+  "hero": {
+    "eyebrow": "Giải pháp & Đào tạo AI chuyên nghiệp",
+    "line1": "ĐÀO TẠO",
+    "line2": "CHUYỂN GIAO",
+    "line3": "VẬN HÀNH",
+    "line4": "AI",
+    "sub": "Nâng tầm năng lực doanh nghiệp và cá nhân thông qua việc làm chủ công nghệ trí tuệ nhân tạo. Giải pháp tinh gọn, hiệu quả và đón đầu xu hướng toàn cầu.",
+    "cta_primary": "BẮT ĐẦU NGAY",
+    "cta_secondary": "TÌM HIỂU THÊM"
+  },
+  "courses": {
+    "title": "Khóa đào tạo tiêu biểu",
+    "desc": "Những chương trình được thiết kế riêng biệt để chuyển hóa tư duy và kỹ năng ứng dụng AI thực tiễn.",
+    "view_all": "XEM TẤT CẢ KHÓA HỌC",
+    "lessons_label": "Bài học",
+    "items": [
+      {
+        "icon": "psychology",
+        "badge": "NÂNG CAO",
+        "title": "AI For Leaders: Tư duy chiến lược",
+        "desc": "Dành cho cấp quản lý muốn tích hợp AI vào quy trình vận hành và tối ưu hóa hiệu suất đội ngũ.",
+        "lessons": "12",
+        "featured": false
+      },
+      {
+        "icon": "smart_toy",
+        "badge": "PHỔ BIẾN",
+        "title": "Làm chủ ChatGPT & Prompt Engineering",
+        "desc": "Kỹ thuật đặt câu hỏi chuyên sâu để biến AI thành trợ lý đắc lực trong mọi lĩnh vực công việc.",
+        "lessons": "08",
+        "featured": true
+      },
+      {
+        "icon": "brush",
+        "badge": "SÁNG TẠO",
+        "title": "Generative AI trong Marketing & Design",
+        "desc": "Ứng dụng Midjourney, Canva AI và các công cụ sáng tạo để đột phá hình ảnh thương hiệu.",
+        "lessons": "15",
+        "featured": false
+      }
+    ]
+  },
+  "cta_banner": {
+    "eyebrow": "AI THỰC CHIẾN CHO DOANH NGHIỆP VIỆT",
+    "title": "Sẵn sàng đưa AI vào vận hành doanh nghiệp?",
+    "desc": "Đặt lịch tư vấn miễn phí — chúng tôi phân tích nhu cầu và đề xuất lộ trình AI phù hợp với doanh nghiệp của bạn.",
+    "cta_primary": "ĐĂNG KÝ TƯ VẤN",
+    "cta_secondary": "XEM KHÓA HỌC"
+  },
+  "about": {
+    "eyebrow": "Về tôi",
+    "title": "Sứ mệnh đồng hành cùng kỷ nguyên trí tuệ nhân tạo",
+    "bio1": "Tôi là <strong>Hung Trinh</strong>, một chuyên gia đào tạo và tư vấn giải pháp AI với hơn 10 năm kinh nghiệm trong lĩnh vực công nghệ và vận hành doanh nghiệp.",
+    "bio2": "Mục tiêu của tôi là xóa bỏ rào cản giữa con người và công nghệ, biến những khái niệm AI phức tạp thành các giải pháp thực tế, giúp bất kỳ ai cũng có thể gia tăng năng suất gấp nhiều lần.",
+    "stat1_value": "500+",
+    "stat1_label": "Học viên",
+    "stat2_value": "20+",
+    "stat2_label": "Dự án chuyển giao"
+  },
+  "footer": {
+    "newsletter_title": "Đăng ký nhận kiến thức AI miễn phí",
+    "newsletter_sub": "Mỗi tuần một bài học AI thực chiến, gửi thẳng vào hộp thư của bạn.",
+    "newsletter_placeholder": "Email của bạn",
+    "newsletter_btn": "GỬI",
+    "brand_desc": "Kiến tạo tương lai cùng trí tuệ nhân tạo. Đào tạo, chuyển giao và vận hành AI chuyên nghiệp cho doanh nghiệp SME Việt Nam.",
+    "col_services": "Dịch vụ",
+    "col_support": "Hỗ trợ",
+    "col_contact": "Hung Trinh AI",
+    "services": [
+      "Đào tạo AI nội bộ",
+      "Chuyển giao công nghệ",
+      "Tư vấn chiến lược AI",
+      "Xây dựng trợ lý AI"
+    ],
+    "support": [
+      "Chính sách bảo mật",
+      "Điều khoản dịch vụ",
+      "Liên hệ hỗ trợ",
+      "FAQ"
+    ],
+    "address": "Hà Nội, Việt Nam",
+    "email": "contact.visun@gmail.com",
+    "phone": "0986 315 286",
+    "hours": "Thứ 2 – Thứ 6, 8:00 – 17:00",
+    "copyright": "© 2026 Hung Trinh AI. All rights reserved.",
+    "tagline": "AI Training • Consulting • Automation"
   }
 }

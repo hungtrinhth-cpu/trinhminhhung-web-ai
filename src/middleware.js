@@ -5,7 +5,12 @@ let locales = ['vi', 'en']
 let defaultLocale = 'vi'
 
 function getLocale(request) {
-  // Try to get locale from cookie, then headers, fallback to default
+  // Respect user's explicit choice stored in cookie
+  const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value
+  if (cookieLocale && locales.includes(cookieLocale)) {
+    return cookieLocale
+  }
+  // Fall back to browser language preference
   const acceptLanguage = request.headers.get('accept-language')
   if (acceptLanguage && acceptLanguage.includes('en')) {
     return 'en'
@@ -14,19 +19,25 @@ function getLocale(request) {
 }
 
 export async function middleware(request) {
-  // Check if there is any supported locale in the pathname
   const { pathname } = request.nextUrl
-  const pathnameHasLocale = locales.some(
+  const currentLocale = locales.find(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   )
 
-  let response = NextResponse.next();
+  let response = NextResponse.next()
 
-  if (!pathnameHasLocale) {
-    // Redirect if there is no locale
+  if (!currentLocale) {
+    // No locale in URL — redirect to the user's preferred locale
     const locale = getLocale(request)
     request.nextUrl.pathname = `/${locale}${pathname}`
     response = NextResponse.redirect(request.nextUrl)
+  } else {
+    // Locale is already in URL — persist it to cookie so future redirects honour it
+    response.cookies.set('NEXT_LOCALE', currentLocale, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      sameSite: 'lax',
+    })
   }
 
   // Update Supabase session (skip if env vars not configured)

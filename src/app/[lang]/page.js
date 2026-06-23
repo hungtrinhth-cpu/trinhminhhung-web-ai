@@ -1,87 +1,50 @@
 import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import FooterComp from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";
 import AnimateIn from "@/components/ui/AnimateIn";
 import Image from "next/image";
 
 export default async function Home({ params }) {
   const { lang } = await params;
-  const dict = await import(`../../dictionaries/${lang}.json`);
+  const dict = (await import(`../../dictionaries/${lang}.json`)).default;
+  const h = dict.hero;
+  const c = dict.courses;
+  const b = dict.cta_banner;
+  const a = dict.about;
 
   return (
     <>
-      <Navbar dict={dict.default} lang={lang} />
+      <Navbar dict={dict} lang={lang} />
 
       <main className="flex-grow">
         {/* ── Hero ── */}
-        {/*
-          Fix #3: items-center on mobile so content isn't bottom-crushed on short viewports;
-          items-end on md+ restores the original desktop look with portrait touching the bottom.
-        */}
         <header className="relative min-h-screen flex items-center md:items-end pt-32 overflow-hidden hero-gradient">
-          {/*
-            Fix #4 (outer): overflow-hidden on the grid container stops the 120% wide
-            decorative bg div from creating horizontal scroll on mobile.
-          */}
           <div className="container mx-auto px-container-padding-mobile md:px-container-padding-desktop grid grid-cols-1 md:grid-cols-10 h-full overflow-hidden">
 
             {/* Hero Left */}
             <div className="md:col-span-6 flex flex-col justify-center pb-12 md:pb-24 z-10">
               <p className="hero-eyebrow font-label-eyebrow text-label-eyebrow text-primary-container mb-6 tracking-[0.2em] uppercase">
-                Expert AI Solutions &amp; Training
+                {h.eyebrow}
               </p>
-              {/*
-                Fix #5: start at 28px on tiny screens (320–374px), scale up to
-                text-headline-hero-mobile (42px) at sm, and text-headline-hero (60px) at md.
-                Reduced mb-8 → mb-4 md:mb-8 to recover vertical space on small phones.
-              */}
               <h1 className="hero-headline font-headline-hero text-[28px] sm:text-headline-hero-mobile md:text-headline-hero text-ink-text leading-tight mb-4 md:mb-8">
-                ĐÀO TẠO<span className="text-visun-orange">+</span><br />
-                CHUYỂN GIAO<span className="text-visun-orange">+</span><br />
-                VẬN HÀNH<span className="text-visun-orange">+</span><br />
-                AI<span className="text-visun-orange">+</span>
+                {h.line1}<span className="text-visun-orange">+</span><br />
+                {h.line2}<span className="text-visun-orange">+</span><br />
+                {h.line3}<span className="text-visun-orange">+</span><br />
+                {h.line4}<span className="text-visun-orange">+</span>
               </h1>
-              {/*
-                Reduced mb-10 → mb-6 md:mb-10 to recover vertical space on mobile.
-              */}
               <p className="hero-sub font-body-lg text-slate-subtext max-w-lg mb-6 md:mb-10 leading-relaxed border-l-2 border-primary-container pl-6">
-                Nâng tầm năng lực doanh nghiệp và cá nhân thông qua việc làm chủ công nghệ trí tuệ nhân tạo. Giải pháp tinh gọn, hiệu quả và đón đầu xu hướng toàn cầu.
+                {h.sub}
               </p>
-              {/*
-                Fix #7: stack buttons vertically on mobile (flex-col), revert to row on sm+.
-                Each Button receives w-full sm:w-auto so it fills its column slot on mobile
-                but returns to auto-width on larger screens.
-              */}
               <div className="hero-cta flex flex-col sm:flex-row flex-wrap gap-4">
-                <Button variant="primary" className="w-full sm:w-auto">BẮT ĐẦU NGAY</Button>
-                <Button variant="secondary" className="w-full sm:w-auto">TÌM HIỂU THÊM</Button>
+                <Button variant="primary" className="w-full sm:w-auto">{h.cta_primary}</Button>
+                <Button variant="secondary" className="w-full sm:w-auto">{h.cta_secondary}</Button>
               </div>
             </div>
 
             {/* Hero Right (Portrait) */}
-            {/*
-              Fix #1: min-h-[320px] sm:min-h-[420px] prevents the column from collapsing
-              to zero height on mobile (grid-cols-1 stacks text above, portrait below).
-              The portrait is still shown on mobile — it just needs a declared height.
-            */}
             <div className="hero-portrait md:col-span-4 relative flex items-end justify-end min-h-[260px] sm:min-h-[380px] md:min-h-[420px]">
-              {/*
-                Fix #1 cont. + Fix #4: remove translate-y-12 on mobile (was pushing image
-                below the viewport). Add overflow-hidden to contain the w-[120%] decorative
-                div on mobile, then allow overflow on md+ for the full visual effect.
-              */}
               <div className="hero-float relative w-full h-full flex items-end justify-end overflow-hidden md:overflow-visible md:translate-y-0">
-                {/*
-                  Fix #4: decorative bg is w-full on mobile (no horizontal overflow),
-                  expands to w-[120%] only on md+ where the wider grid column can absorb it.
-                */}
                 <div className="absolute bottom-0 right-0 w-full md:w-[120%] h-[80%] bg-primary-container/5 rounded-tl-[100px] -z-10" />
-                {/*
-                  Fix #2: add w-full to className so the image constrains to its container
-                  width (prevents the 600px intrinsic width from exceeding mobile viewport).
-                  sizes prop tells the browser the correct render width at each breakpoint
-                  so it serves the right source from the srcSet.
-                */}
                 <Image
                   alt="Chân dung Anh Hùng Trịnh"
                   className="w-full max-h-[90vh] object-contain object-bottom drop-shadow-2xl"
@@ -95,13 +58,8 @@ export default async function Home({ params }) {
             </div>
           </div>
 
-          {/*
-            Fix #6: z-20 ensures the indicator renders above stacked content when the
-            hero is taller than the viewport on mobile. hidden sm:flex hides the indicator
-            on very small screens where it would be unreachable or clip behind the portrait.
-          */}
           <div className="hero-cta absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2 opacity-40 z-20">
-            <span className="font-label-eyebrow text-label-eyebrow text-ink-text uppercase tracking-widest">Cuộn xuống</span>
+            <span className="font-label-eyebrow text-label-eyebrow text-ink-text uppercase tracking-widest">{dict.navigation.scroll}</span>
             <div className="w-px h-8 bg-ink-text/30 animate-bounce" />
           </div>
         </header>
@@ -109,34 +67,22 @@ export default async function Home({ params }) {
         {/* ── Courses ── */}
         <section className="py-16 md:py-section-gap bg-pure-white" id="khoa-hoc">
           <div className="container mx-auto px-container-padding-mobile md:px-container-padding-desktop">
-            {/*
-              Fix #9: items-start on mobile so the section title left-aligns correctly
-              in single-column flex layout; items-end on md+ aligns it with the link baseline.
-            */}
             <AnimateIn className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
               <div>
                 <h2 className="font-headline-section text-headline-section-mobile md:text-headline-section text-ink-text mb-4">
-                  Khóa đào tạo tiêu biểu
+                  {c.title}
                 </h2>
                 <p className="font-body-md text-slate-subtext max-w-md">
-                  Những chương trình được thiết kế riêng biệt để chuyển hóa tư duy và kỹ năng ứng dụng AI thực tiễn.
+                  {c.desc}
                 </p>
               </div>
-              <a className="font-button-text text-button-text text-primary-container flex items-center gap-2 hover:translate-x-2 transition-transform" href="#">
-                XEM TẤT CẢ KHÓA HỌC <span className="material-symbols-outlined">arrow_forward</span>
+              <a className="font-button-text text-button-text text-primary-container flex items-center gap-2 hover:translate-x-2 transition-transform whitespace-nowrap" href="#">
+                {c.view_all} <span className="material-symbols-outlined">arrow_forward</span>
               </a>
             </AnimateIn>
 
-            {/*
-              Fix #8: add sm:grid-cols-2 intermediate breakpoint so tablets in portrait
-              mode show 2 cards instead of 1. Desktop (lg+) gets 3 columns.
-            */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
-              {[
-                { icon: "psychology", badge: "ADVANCED", title: "AI For Leaders: Tư duy chiến lược", desc: "Dành cho cấp quản lý muốn tích hợp AI vào quy trình vận hành và tối ưu hóa hiệu suất đội ngũ.", lessons: "12 Bài học", featured: false },
-                { icon: "smart_toy", badge: "POPULAR", title: "Làm chủ ChatGPT & Prompt Engineering", desc: "Kỹ thuật đặt câu hỏi chuyên sâu để biến AI thành trợ lý đắc lực trong mọi lĩnh vực công việc.", lessons: "08 Bài học", featured: true },
-                { icon: "brush", badge: "CREATIVE", title: "Generative AI trong Marketing & Design", desc: "Ứng dụng Midjourney, Canva AI và các công cụ sáng tạo để đột phá hình ảnh thương hiệu.", lessons: "15 Bài học", featured: false },
-              ].map((course, i) => (
+              {c.items.map((course, i) => (
                 <AnimateIn key={course.badge} delay={i * 100}>
                   <div className={`glass-card p-8 rounded-xl flex flex-col group hover:border-visun-orange/40 hover:-translate-y-2 hover:shadow-xl hover:shadow-visun-orange/10 transition-all duration-500 h-full ${course.featured ? "border-visun-blue/20 shadow-xl shadow-visun-blue/5" : ""}`}>
                     <div className="w-14 h-14 rounded-lg bg-visun-blue/10 flex items-center justify-center mb-6 text-visun-blue group-hover:scale-110 group-hover:bg-visun-blue/20 transition-all duration-300">
@@ -147,7 +93,7 @@ export default async function Home({ params }) {
                     <p className="font-body-md text-slate-subtext mb-8 flex-grow">{course.desc}</p>
                     <hr className="border-border-subtle mb-6" />
                     <div className="flex justify-between items-center">
-                      <span className="font-button-text text-button-text text-ink-text">{course.lessons}</span>
+                      <span className="font-button-text text-button-text text-ink-text">{course.lessons} {c.lessons_label}</span>
                       <button className="w-10 h-10 rounded-full bg-visun-orange/10 text-visun-orange flex items-center justify-center group-hover:bg-visun-orange group-hover:text-white transition-all duration-300">
                         <span className="material-symbols-outlined text-sm">north_east</span>
                       </button>
@@ -165,22 +111,22 @@ export default async function Home({ params }) {
             <AnimateIn className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
               <div className="max-w-xl">
                 <p className="font-label-eyebrow text-label-eyebrow text-sunrise uppercase tracking-[0.2em] mb-4">
-                  AI THỰC CHIẾN CHO DOANH NGHIỆP VIỆT
+                  {b.eyebrow}
                 </p>
                 <h2 className="font-headline-section text-headline-section-mobile md:text-headline-section text-pure-white leading-tight mb-4">
-                  Sẵn sàng đưa AI vào vận hành doanh nghiệp?
+                  {b.title}
                 </h2>
                 <p className="font-body-lg text-pure-white/70 leading-relaxed">
-                  Đặt lịch tư vấn miễn phí — chúng tôi phân tích nhu cầu và đề xuất lộ trình AI phù hợp với doanh nghiệp của bạn.
+                  {b.desc}
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 shrink-0">
-                <Button variant="primary" className="whitespace-nowrap">ĐĂNG KÝ TƯ VẤN</Button>
+                <Button variant="primary" className="whitespace-nowrap">{b.cta_primary}</Button>
                 <a
                   href="#khoa-hoc"
                   className="inline-flex items-center justify-center gap-2 rounded-full font-button-text text-button-text border-2 border-white/30 text-white px-10 py-5 hover:border-white hover:bg-white/10 transition-all duration-300 whitespace-nowrap"
                 >
-                  XEM KHÓA HỌC
+                  {b.cta_secondary}
                 </a>
               </div>
             </AnimateIn>
@@ -190,19 +136,9 @@ export default async function Home({ params }) {
         {/* ── About ── */}
         <section className="py-section-gap bg-mist-bg overflow-hidden" id="about">
           <div className="container mx-auto px-container-padding-mobile md:px-container-padding-desktop">
-            {/*
-              Fix #10: gap-10 on mobile (40px) reduces excessive whitespace between the
-              image and text blocks; restores gap-20 (80px) on md+ for desktop breathing room.
-            */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
 
               <AnimateIn delay={0}>
-                {/*
-                  Fix #11: overflow-hidden on mobile clips the -top-10/-left-10 decorative
-                  elements that bleed outside the container, preventing horizontal scroll.
-                  md:overflow-visible restores the decorative overflow on desktop where the
-                  outer section's overflow-hidden already contains the bleed within the page.
-                */}
                 <div className="relative overflow-hidden md:overflow-visible">
                   <div className="aspect-square rounded-2xl overflow-hidden glass-card p-4 relative z-10 hover:scale-[1.02] transition-transform duration-500">
                     <div
@@ -217,28 +153,22 @@ export default async function Home({ params }) {
 
               <AnimateIn delay={150}>
                 <div className="flex flex-col">
-                  <span className="font-label-eyebrow text-label-eyebrow text-visun-orange mb-4 tracking-[0.2em] uppercase">Về tôi</span>
+                  <span className="font-label-eyebrow text-3xl font-bold text-visun-orange mb-4 tracking-[0.2em] uppercase">{a.eyebrow}</span>
                   <h2 className="font-headline-section text-headline-section-mobile md:text-headline-section text-ink-text mb-8 leading-tight">
-                    Sứ mệnh đồng hành cùng kỷ nguyên trí tuệ nhân tạo
+                    {a.title}
                   </h2>
                   <div className="space-y-6">
+                    <p className="font-body-lg text-slate-subtext leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: a.bio1 }}
+                    />
                     <p className="font-body-lg text-slate-subtext leading-relaxed">
-                      Tôi là <strong>Hung Trinh</strong>, một chuyên gia đào tạo và tư vấn giải pháp AI với hơn 10 năm kinh nghiệm trong lĩnh vực công nghệ và vận hành doanh nghiệp.
-                    </p>
-                    <p className="font-body-lg text-slate-subtext leading-relaxed">
-                      Mục tiêu của tôi là xóa bỏ rào cản giữa con người và công nghệ, biến những khái niệm AI phức tạp thành các giải pháp thực tế, giúp bất kỳ ai cũng có thể gia tăng năng suất gấp nhiều lần.
+                      {a.bio2}
                     </p>
                     <div className="grid grid-cols-2 gap-8 pt-8">
                       {[
-                        { value: "500+", label: "Học viên" },
-                        { value: "20+", label: "Dự án chuyển giao" },
+                        { value: a.stat1_value, label: a.stat1_label },
+                        { value: a.stat2_value, label: a.stat2_label },
                       ].map((stat) => (
-                        /*
-                          Fix #12: overflow-hidden on the stat div prevents the scale-110
-                          hover transform from causing layout reflow that pushes sibling elements.
-                          will-change-transform is set inline to promote the animated child
-                          to its own compositor layer.
-                        */
                         <div key={stat.label} className="group overflow-hidden">
                           <div
                             className="text-headline-section font-black text-visun-blue mb-1 group-hover:scale-110 transition-transform duration-300 inline-block"
@@ -259,7 +189,7 @@ export default async function Home({ params }) {
         </section>
       </main>
 
-      <Footer dict={dict.default} lang={lang} />
+      <FooterComp dict={dict} lang={lang} />
     </>
   );
 }

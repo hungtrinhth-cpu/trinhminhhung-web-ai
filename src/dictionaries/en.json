@@ -6,6 +6,101 @@
     "blogs": "BLOGS",
     "resources": "RESOURCES",
     "contact": "CONTACT",
-    "portal": "Student Portal"
+    "portal": "Student Portal",
+    "consult": "GET CONSULTATION",
+    "scroll": "Scroll down",
+    "course_items": [
+      "CORPORATE AI TRAINING",
+      "AI COURSES FOR INDIVIDUALS",
+      "E-LEARNING COURSES",
+      "DIGITAL RESOURCES"
+    ]
+  },
+  "hero": {
+    "eyebrow": "Expert AI Solutions & Training",
+    "line1": "TRAIN",
+    "line2": "TRANSFER",
+    "line3": "OPERATE",
+    "line4": "AI",
+    "sub": "Elevate your business and personal capabilities by mastering artificial intelligence. Lean, effective solutions that stay ahead of global trends.",
+    "cta_primary": "GET STARTED",
+    "cta_secondary": "LEARN MORE"
+  },
+  "courses": {
+    "title": "Featured Training Courses",
+    "desc": "Programs designed to transform your mindset and practical AI application skills.",
+    "view_all": "VIEW ALL COURSES",
+    "lessons_label": "Lessons",
+    "items": [
+      {
+        "icon": "psychology",
+        "badge": "ADVANCED",
+        "title": "AI For Leaders: Strategic Thinking",
+        "desc": "For managers who want to integrate AI into operations and optimize team performance.",
+        "lessons": "12",
+        "featured": false
+      },
+      {
+        "icon": "smart_toy",
+        "badge": "POPULAR",
+        "title": "Master ChatGPT & Prompt Engineering",
+        "desc": "Advanced questioning techniques to turn AI into a powerful assistant across all work areas.",
+        "lessons": "08",
+        "featured": true
+      },
+      {
+        "icon": "brush",
+        "badge": "CREATIVE",
+        "title": "Generative AI in Marketing & Design",
+        "desc": "Apply Midjourney, Canva AI and creative tools to break through your brand's visual identity.",
+        "lessons": "15",
+        "featured": false
+      }
+    ]
+  },
+  "cta_banner": {
+    "eyebrow": "PRACTICAL AI FOR VIETNAMESE BUSINESSES",
+    "title": "Ready to bring AI into your business operations?",
+    "desc": "Book a free consultation — we analyse your needs and propose an AI roadmap tailored to your business.",
+    "cta_primary": "BOOK CONSULTATION",
+    "cta_secondary": "VIEW COURSES"
+  },
+  "about": {
+    "eyebrow": "About Me",
+    "title": "A mission to accompany the era of artificial intelligence",
+    "bio1": "I am <strong>Hung Trinh</strong>, an AI training and consulting expert with over 10 years of experience in technology and business operations.",
+    "bio2": "My goal is to remove the barriers between people and technology, turning complex AI concepts into practical solutions that help anyone multiply their productivity many times over.",
+    "stat1_value": "500+",
+    "stat1_label": "Students",
+    "stat2_value": "20+",
+    "stat2_label": "Transfer Projects"
+  },
+  "footer": {
+    "newsletter_title": "Subscribe for free AI insights",
+    "newsletter_sub": "One practical AI lesson every week, delivered straight to your inbox.",
+    "newsletter_placeholder": "Your email",
+    "newsletter_btn": "SEND",
+    "brand_desc": "Building the future together with artificial intelligence. Professional AI training, transfer and operations for Vietnamese SMEs.",
+    "col_services": "Services",
+    "col_support": "Support",
+    "col_contact": "Hung Trinh AI",
+    "services": [
+      "In-house AI Training",
+      "Technology Transfer",
+      "AI Strategy Consulting",
+      "AI Assistant Development"
+    ],
+    "support": [
+      "Privacy Policy",
+      "Terms of Service",
+      "Contact Support",
+      "FAQ"
+    ],
+    "address": "Hanoi, Vietnam",
+    "email": "contact.visun@gmail.com",
+    "phone": "0986 315 286",
+    "hours": "Mon – Fri, 8:00 – 17:00",
+    "copyright": "© 2026 Hung Trinh AI. All rights reserved.",
+    "tagline": "AI Training • Consulting • Automation"
   }
 }
