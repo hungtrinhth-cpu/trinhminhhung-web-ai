@@ -302,7 +302,7 @@ export default function Navbar({ dict, lang, mode = "public" }) {
             : "bg-glass-bg backdrop-blur-md border-transparent"
         }`}
       >
-        <div className="flex justify-between items-center w-full px-container-padding-mobile md:px-container-padding-desktop py-4 mx-auto max-w-[1440px]">
+        <div className="flex justify-between items-center w-full px-container-padding-mobile md:px-container-padding-desktop py-5 mx-auto max-w-[1440px]">
           {/* Logo */}
           <Link
             href={`/${lang}`}
@@ -312,16 +312,16 @@ export default function Navbar({ dict, lang, mode = "public" }) {
           </Link>
 
           {/* Desktop nav links */}
-          <div className="hidden md:flex gap-8 items-center">
+          <div className="hidden md:flex gap-6 lg:gap-8 items-center">
             <Link
               href={`/${lang}`}
-              className="font-button-text text-button-text uppercase tracking-widest text-primary-container border-b-2 border-primary-container pb-1"
+              className="font-button-text text-button-text uppercase tracking-wider text-primary-container border-b-2 border-primary-container pb-1 whitespace-nowrap"
             >
               {dict?.navigation?.home ?? "TRANG CHỦ"}
             </Link>
             <Link
               href={`/${lang}#about`}
-              className="font-button-text text-button-text uppercase tracking-widest text-ink-text hover:text-primary-container transition-colors"
+              className="font-button-text text-button-text uppercase tracking-wider text-ink-text hover:text-primary-container transition-colors whitespace-nowrap"
             >
               {dict?.navigation?.about ?? "VỀ TÔI"}
             </Link>
@@ -332,7 +332,7 @@ export default function Navbar({ dict, lang, mode = "public" }) {
                 onClick={() => setDropdownOpen((o) => !o)}
                 aria-expanded={dropdownOpen}
                 aria-haspopup="menu"
-                className="font-button-text text-button-text uppercase tracking-widest text-ink-text hover:text-primary-container transition-colors flex items-center gap-1"
+                className="font-button-text text-button-text uppercase tracking-wider text-ink-text hover:text-primary-container transition-colors flex items-center gap-1 whitespace-nowrap"
               >
                 {dict?.navigation?.courses ?? "KHÓA ĐÀO TẠO AI"}
                 <span
@@ -375,13 +375,13 @@ export default function Navbar({ dict, lang, mode = "public" }) {
 
             <Link
               href={`/${lang}/blog`}
-              className="font-button-text text-button-text uppercase tracking-widest text-ink-text hover:text-primary-container transition-colors"
+              className="font-button-text text-button-text uppercase tracking-wider text-ink-text hover:text-primary-container transition-colors whitespace-nowrap"
             >
               {dict?.navigation?.blogs ?? "BLOG"}
             </Link>
             <Link
               href={`/${lang}/tai-lieu`}
-              className="font-button-text text-button-text uppercase tracking-widest text-ink-text hover:text-primary-container transition-colors"
+              className="font-button-text text-button-text uppercase tracking-wider text-ink-text hover:text-primary-container transition-colors whitespace-nowrap"
             >
               {dict?.navigation?.resources ?? "THƯ VIỆN"}
             </Link>
