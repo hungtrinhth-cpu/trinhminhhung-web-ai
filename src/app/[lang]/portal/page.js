@@ -68,7 +68,15 @@ export default async function PortalHome({ params }) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
             {courses.map((course) => (
-              <Link key={course.id} href={`/${lang}/khoa-hoc/${course.slug}`} className="block group">
+              <Link
+                key={course.id}
+                href={
+                  course.nextLessonId
+                    ? `/${lang}/portal/bai-hoc/${course.nextLessonId}`
+                    : `/${lang}/khoa-hoc/${course.slug}`
+                }
+                className="block group"
+              >
                 <div className="glass-card rounded-xl overflow-hidden hover:border-primary-container/30 transition-all duration-300">
                   <div className="h-32 bg-surface-container flex items-center justify-center overflow-hidden">
                     {course.thumbnail_url ? (

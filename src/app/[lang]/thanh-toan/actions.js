@@ -134,3 +134,41 @@ export async function registerForWebinar({ webinarId, amount, lang, currentPath,
 
   redirect(`/${lang}/thanh-toan/${result.orderId}`)
 }
+
+/**
+ * Course registration CTA — mirrors registerForWebinar exactly (including
+ * tracking capture) but for item_type='course'. Kept as a separate function
+ * rather than a shared helper so registerForWebinar's behavior is untouched.
+ *
+ * @param {object} opts
+ * @param {string} opts.courseId
+ * @param {number} opts.amount
+ * @param {string} opts.lang
+ * @param {string} opts.currentPath - the course page path+query to return to
+ * @param {object} opts.tracking - ref/utm_* pulled from the course page URL
+ */
+export async function registerForCourse({ courseId, amount, lang, currentPath, tracking }) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    const next = safeNextPath(currentPath) ?? `/${lang}/khoa-hoc`
+    redirect(`/${lang}/auth/login?next=${encodeURIComponent(next)}`)
+  }
+
+  const result = await createCheckout({
+    itemType: 'course',
+    itemId: courseId,
+    amount,
+    metadata: tracking,
+  })
+
+  if (result?.error) {
+    const separator = currentPath.includes('?') ? '&' : '?'
+    redirect(`${currentPath}${separator}checkout_error=1`)
+  }
+
+  redirect(`/${lang}/thanh-toan/${result.orderId}`)
+}

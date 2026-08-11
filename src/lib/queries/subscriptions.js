@@ -70,11 +70,13 @@ export async function getMyCourses() {
     .select("id, slug, title, subtitle, level, thumbnail_url")
     .in("id", courseIds);
 
-  // Lessons + progress for each course → compute completion.
+  // Lessons + progress for each course → compute completion and the next
+  // lesson to resume at (first incomplete by order, else the first lesson).
   const { data: lessons } = await supabase
     .from("lessons")
-    .select("id, course_id")
-    .in("course_id", courseIds);
+    .select("id, course_id, order")
+    .in("course_id", courseIds)
+    .order("order", { ascending: true });
 
   const { data: progress } = await supabase
     .from("lesson_progress")
@@ -87,18 +89,26 @@ export async function getMyCourses() {
 
   const lessonsByCourse = {};
   for (const l of lessons ?? []) {
-    (lessonsByCourse[l.course_id] ??= []).push(l.id);
+    (lessonsByCourse[l.course_id] ??= []).push(l);
+  }
+  // Defensive re-sort per course — the query orders globally by "order",
+  // not per-group, so this guarantees correct ordering within each course.
+  for (const list of Object.values(lessonsByCourse)) {
+    list.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   }
 
   return (courses ?? []).map((c) => {
-    const ids = lessonsByCourse[c.id] ?? [];
+    const list = lessonsByCourse[c.id] ?? [];
+    const ids = list.map((l) => l.id);
     const done = ids.filter((id) => completedSet.has(id)).length;
     const total = ids.length;
+    const nextLesson = list.find((l) => !completedSet.has(l.id)) ?? list[0] ?? null;
     return {
       ...c,
       lessonsCount: total,
       completedCount: done,
       progress: total > 0 ? Math.round((done / total) * 100) : 0,
+      nextLessonId: nextLesson?.id ?? null,
     };
   });
 }
