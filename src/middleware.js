@@ -1,55 +1,120 @@
 import { NextResponse } from "next/server";
-import { updateSession } from './lib/supabase/middleware'
+import { createMiddlewareSupabase } from "./lib/supabase/middleware";
+import { isStaffRole, roleHomePath } from "./lib/auth-helpers";
 
-let locales = ['vi', 'en']
-let defaultLocale = 'vi'
+const locales = ["vi", "en"];
+const defaultLocale = "vi";
 
-function getLocale(request) {
-  // Respect user's explicit choice stored in cookie
-  const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value
+const supabaseConfigured =
+  !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+function getPreferredLocale(request) {
+  const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
   if (cookieLocale && locales.includes(cookieLocale)) {
-    return cookieLocale
+    return cookieLocale;
   }
-  // Fall back to browser language preference
-  const acceptLanguage = request.headers.get('accept-language')
-  if (acceptLanguage && acceptLanguage.includes('en')) {
-    return 'en'
+  const acceptLanguage = request.headers.get("accept-language");
+  if (acceptLanguage && acceptLanguage.includes("en")) {
+    return "en";
   }
-  return defaultLocale
+  return defaultLocale;
 }
 
 export async function middleware(request) {
-  const { pathname } = request.nextUrl
+  const { pathname } = request.nextUrl;
+
+  // ── 1. Locale: ensure every path is prefixed with a supported locale ──
   const currentLocale = locales.find(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  )
-
-  let response = NextResponse.next()
+  );
 
   if (!currentLocale) {
-    // No locale in URL — redirect to the user's preferred locale
-    const locale = getLocale(request)
-    request.nextUrl.pathname = `/${locale}${pathname}`
-    response = NextResponse.redirect(request.nextUrl)
-  } else {
-    // Locale is already in URL — persist it to cookie so future redirects honour it
-    response.cookies.set('NEXT_LOCALE', currentLocale, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365, // 1 year
-      sameSite: 'lax',
-    })
+    const locale = getPreferredLocale(request);
+    request.nextUrl.pathname = `/${locale}${pathname}`;
+    return NextResponse.redirect(request.nextUrl);
   }
 
-  // Update Supabase session (skip if env vars not configured)
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return await updateSession(request, response)
+  // Base response that carries forward any refreshed Supabase cookies.
+  let response = NextResponse.next();
+
+  // Persist the locale the user is actually viewing.
+  response.cookies.set("NEXT_LOCALE", currentLocale, {
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: "lax",
+  });
+
+  // ── 2. Auth + route protection ──
+  const segments = pathname.split("/").filter(Boolean); // ['vi','admin',...]
+  const section = segments[1]; // 'admin' | 'portal' | 'auth' | undefined
+  const subsection = segments[2];
+
+  const needsAuthContext =
+    supabaseConfigured &&
+    (section === "admin" || section === "portal" || section === "auth");
+
+  if (!needsAuthContext) {
+    return response;
   }
-  return response
+
+  const supabase = createMiddlewareSupabase(request, response);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const loginUrl = new URL(`/${currentLocale}/auth/login`, request.url);
+
+  // Protect /admin — staff roles only.
+  if (section === "admin") {
+    if (!user) {
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (!isStaffRole(profile?.role)) {
+      // Authenticated but not staff → send to their own home.
+      return NextResponse.redirect(
+        new URL(roleHomePath(currentLocale, profile?.role ?? "student"), request.url)
+      );
+    }
+    return response;
+  }
+
+  // Protect /portal — any authenticated user.
+  if (section === "portal") {
+    if (!user) {
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    return response;
+  }
+
+  // Auth pages — bounce already-authenticated users to their home.
+  // Never touch /auth/callback (OAuth exchange must run).
+  if (section === "auth" && (subsection === "login" || subsection === "register")) {
+    if (user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      return NextResponse.redirect(
+        new URL(roleHomePath(currentLocale, profile?.role ?? "student"), request.url)
+      );
+    }
+  }
+
+  return response;
 }
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next, api)
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
-}
+};

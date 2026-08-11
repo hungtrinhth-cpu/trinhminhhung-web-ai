@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname, useParams } from "next/navigation";
+import { signOut } from "../auth/actions";
 
 const sidebarItems = [
   { icon: "dashboard", label: "Tổng quan", href: "" },
@@ -22,12 +23,12 @@ export default function AdminLayout({ children }) {
   return (
     <div className="flex min-h-screen bg-mist-bg overflow-x-hidden">
       {/* ── Desktop Sidebar (hidden on mobile) ── */}
-      <aside className="w-[280px] bg-pure-white border-r border-border-subtle flex flex-col shrink-0 fixed top-0 left-0 h-full z-40 hidden md:flex">
-        <div className="px-6 py-6 border-b border-border-subtle">
-          <Link href={`/${lang}`} className="font-headline-sub text-headline-sub font-black text-ink-text block mb-1">
+      <aside className="w-[280px] bg-primary border-r border-border-subtle flex flex-col shrink-0 fixed top-0 left-0 h-full z-40 hidden md:flex">
+        <div className="px-6 py-6 border-b border-border-subtle/20">
+          <Link href={`/${lang}`} className="font-headline-sub text-headline-sub font-black text-white block mb-1">
             Hung Trinh AI
           </Link>
-          <span className="font-label-eyebrow text-label-eyebrow text-primary-container uppercase">CRM Admin</span>
+          <span className="font-label-eyebrow text-label-eyebrow text-white/70 uppercase">CRM Admin</span>
         </div>
 
         <nav className="flex flex-col gap-1 p-4 flex-1">
@@ -40,12 +41,12 @@ export default function AdminLayout({ children }) {
                 href={href}
                 className={`relative flex items-center gap-3 px-4 py-3 rounded-xl font-body-md transition-all ${
                   isActive
-                    ? "bg-primary-container/10 text-primary-container font-bold"
-                    : "text-slate-subtext hover:bg-primary-container/5 hover:text-primary-container"
+                    ? "bg-secondary text-white font-bold"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-primary-container rounded-r-full" />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-white rounded-r-full" />
                 )}
                 <span className="material-symbols-outlined text-xl">{item.icon}</span>
                 {item.label}
@@ -54,18 +55,23 @@ export default function AdminLayout({ children }) {
           })}
         </nav>
 
-        <div className="p-4 border-t border-border-subtle space-y-2">
+        <div className="p-4 border-t border-border-subtle/20 space-y-2">
           <Link
             href={`/${lang}`}
-            className="flex items-center gap-2 px-4 py-2 font-body-md text-slate-subtext hover:text-primary-container transition-colors text-sm"
+            className="flex items-center gap-2 px-4 py-2 font-body-md text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-sm"
           >
             <span className="material-symbols-outlined text-base">open_in_new</span>
             Xem website
           </Link>
-          <button className="flex items-center gap-2 px-4 py-2 font-body-md text-slate-subtext hover:text-error transition-colors text-sm w-full">
-            <span className="material-symbols-outlined text-base">logout</span>
-            Đăng xuất
-          </button>
+          <form action={signOut.bind(null, lang)}>
+            <button
+              type="submit"
+              className="flex items-center gap-2 px-4 py-2 font-body-md text-white/70 hover:text-error hover:bg-white/10 rounded-lg transition-colors text-sm w-full"
+            >
+              <span className="material-symbols-outlined text-base">logout</span>
+              Đăng xuất
+            </button>
+          </form>
         </div>
       </aside>
 
@@ -80,23 +86,23 @@ export default function AdminLayout({ children }) {
 
           {/* Drawer panel */}
           <aside
-            className="absolute top-0 left-0 h-full w-[280px] bg-pure-white flex flex-col shadow-2xl"
+            className="absolute top-0 left-0 h-full w-[280px] bg-primary flex flex-col shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="px-6 py-6 border-b border-border-subtle flex items-center justify-between">
+            <div className="px-6 py-6 border-b border-border-subtle/20 flex items-center justify-between">
               <div>
                 <Link
                   href={`/${lang}`}
-                  className="font-headline-sub text-headline-sub font-black text-ink-text block mb-1"
+                  className="font-headline-sub text-headline-sub font-black text-white block mb-1"
                   onClick={() => setDrawerOpen(false)}
                 >
                   Hung Trinh AI
                 </Link>
-                <span className="font-label-eyebrow text-label-eyebrow text-primary-container uppercase">CRM Admin</span>
+                <span className="font-label-eyebrow text-label-eyebrow text-white/70 uppercase">CRM Admin</span>
               </div>
               <button
                 onClick={() => setDrawerOpen(false)}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-subtext hover:bg-mist-bg transition-colors shrink-0"
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-white/70 hover:bg-white/10 transition-colors shrink-0"
                 aria-label="Đóng menu"
               >
                 <span className="material-symbols-outlined text-xl">close</span>
@@ -114,12 +120,12 @@ export default function AdminLayout({ children }) {
                     onClick={() => setDrawerOpen(false)}
                     className={`relative flex items-center gap-3 px-4 py-3 rounded-xl font-body-md transition-all ${
                       isActive
-                        ? "bg-primary-container/10 text-primary-container font-bold"
-                        : "text-slate-subtext hover:bg-primary-container/5 hover:text-primary-container"
+                        ? "bg-secondary text-white font-bold"
+                        : "text-white/70 hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     {isActive && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-primary-container rounded-r-full" />
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-white rounded-r-full" />
                     )}
                     <span className="material-symbols-outlined text-xl">{item.icon}</span>
                     {item.label}
@@ -128,19 +134,24 @@ export default function AdminLayout({ children }) {
               })}
             </nav>
 
-            <div className="p-4 border-t border-border-subtle space-y-2">
+            <div className="p-4 border-t border-border-subtle/20 space-y-2">
               <Link
                 href={`/${lang}`}
                 onClick={() => setDrawerOpen(false)}
-                className="flex items-center gap-2 px-4 py-2 font-body-md text-slate-subtext hover:text-primary-container transition-colors text-sm"
+                className="flex items-center gap-2 px-4 py-2 font-body-md text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-sm"
               >
                 <span className="material-symbols-outlined text-base">open_in_new</span>
                 Xem website
               </Link>
-              <button className="flex items-center gap-2 px-4 py-2 font-body-md text-slate-subtext hover:text-error transition-colors text-sm w-full">
-                <span className="material-symbols-outlined text-base">logout</span>
-                Đăng xuất
-              </button>
+              <form action={signOut.bind(null, lang)}>
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-4 py-2 font-body-md text-white/70 hover:text-error hover:bg-white/10 rounded-lg transition-colors text-sm w-full"
+                >
+                  <span className="material-symbols-outlined text-base">logout</span>
+                  Đăng xuất
+                </button>
+              </form>
             </div>
           </aside>
         </div>

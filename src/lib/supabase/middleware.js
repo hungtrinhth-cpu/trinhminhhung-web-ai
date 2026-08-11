@@ -1,8 +1,12 @@
 import { createServerClient } from '@supabase/ssr'
-import { NextResponse } from 'next/server'
 
-export async function updateSession(request, response) {
-  const supabase = createServerClient(
+/**
+ * Creates a Supabase client bound to the proxy/middleware request + response
+ * cookie jars. The caller is responsible for returning `response` so refreshed
+ * auth cookies propagate to the browser.
+ */
+export function createMiddlewareSupabase(request, response) {
+  return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
@@ -11,7 +15,7 @@ export async function updateSession(request, response) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           )
@@ -19,7 +23,4 @@ export async function updateSession(request, response) {
       },
     }
   )
-
-  await supabase.auth.getUser()
-  return response
 }

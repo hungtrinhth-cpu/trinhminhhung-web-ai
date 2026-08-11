@@ -4,10 +4,38 @@ import { useState } from "react";
 
 export default function ConsultModal({ isOpen, onClose }) {
   const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSending(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/lead-magnet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          source: "Tư vấn chiến lược AI",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Gửi thất bại, vui lòng thử lại");
+        setSending(false);
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setError("Lỗi kết nối, vui lòng thử lại");
+    }
+    setSending(false);
   };
 
   if (!isOpen) return null;
@@ -125,30 +153,40 @@ export default function ConsultModal({ isOpen, onClose }) {
                 <input
                   required
                   type="text"
+                  value={form.name}
+                  onChange={set("name")}
                   placeholder="Họ và tên của bạn"
                   className="w-full px-5 py-3.5 min-h-[44px] rounded-xl border border-border-subtle bg-mist-bg font-body-lg text-ink-text placeholder:text-slate-subtext/40 focus:outline-none focus:border-primary-container transition-all"
                 />
                 <input
                   required
                   type="tel"
+                  value={form.phone}
+                  onChange={set("phone")}
                   placeholder="Số điện thoại (Zalo)"
                   className="w-full px-5 py-3.5 min-h-[44px] rounded-xl border border-border-subtle bg-mist-bg font-body-lg text-ink-text placeholder:text-slate-subtext/40 focus:outline-none focus:border-primary-container transition-all"
                 />
                 <input
                   type="email"
+                  value={form.email}
+                  onChange={set("email")}
                   placeholder="Email doanh nghiệp (nếu có)"
                   className="w-full px-5 py-3.5 min-h-[44px] rounded-xl border border-border-subtle bg-mist-bg font-body-lg text-ink-text placeholder:text-slate-subtext/40 focus:outline-none focus:border-primary-container transition-all"
                 />
                 <textarea
                   rows={3}
+                  value={form.message}
+                  onChange={set("message")}
                   placeholder="Lời nhắn (Tùy chọn)..."
                   className="w-full px-5 py-3.5 rounded-xl border border-border-subtle bg-mist-bg font-body-lg text-ink-text placeholder:text-slate-subtext/40 focus:outline-none focus:border-primary-container transition-all resize-none"
                 />
+                {error && <p className="text-error text-sm text-center">{error}</p>}
                 <button
                   type="submit"
-                  className="w-full py-4 bg-ink-text text-white rounded-xl font-button-text text-button-text uppercase tracking-[0.1em] hover:bg-primary-container transition-all duration-300 flex items-center justify-center gap-3 group"
+                  disabled={sending}
+                  className="w-full py-4 bg-ink-text text-white rounded-xl font-button-text text-button-text uppercase tracking-[0.1em] hover:bg-primary-container transition-all duration-300 flex items-center justify-center gap-3 group disabled:opacity-60"
                 >
-                  GỬI THÔNG TIN NGAY
+                  {sending ? "ĐANG GỬI..." : "GỬI THÔNG TIN NGAY"}
                   <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">
                     send
                   </span>

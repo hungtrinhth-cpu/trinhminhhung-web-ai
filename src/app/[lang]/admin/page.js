@@ -1,27 +1,62 @@
 import Link from "next/link";
-import { mockStats, mockChartData, mockCampaigns, mockTransactions } from "@/lib/mock-data";
+import { getDashboardStats } from "@/lib/queries/dashboard";
+
+function formatVND(n) {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M đ`;
+  return `${n.toLocaleString("vi-VN")}đ`;
+}
 
 export default async function AdminDashboard({ params }) {
   const { lang } = await params;
-  const maxChart = Math.max(...mockChartData.map((d) => d.value));
+  const stats = await getDashboardStats();
+  const maxChart = Math.max(1, ...stats.revenueByMonth.map((d) => d.value));
+
+  const kpis = [
+    {
+      label: "Doanh thu tháng",
+      value: formatVND(stats.revenue.value),
+      change: `${stats.revenue.pct >= 0 ? "+" : ""}${stats.revenue.pct}%`,
+      trend: stats.revenue.pct >= 0 ? "up" : "down",
+    },
+    {
+      label: "Leads mới",
+      value: String(stats.newLeads.value),
+      change: `${stats.newLeads.delta >= 0 ? "+" : ""}${stats.newLeads.delta}`,
+      trend: stats.newLeads.delta >= 0 ? "up" : "down",
+    },
+    {
+      label: "Đơn hàng",
+      value: String(stats.orders.value),
+      change: "",
+      trend: "up",
+    },
+    {
+      label: "Tỉ lệ chuyển đổi",
+      value: `${stats.conversion.value}%`,
+      change: "",
+      trend: "up",
+    },
+  ];
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="font-headline-section text-headline-section-mobile md:text-headline-section text-ink-text">Tổng quan</h1>
-        <p className="font-body-md text-slate-subtext mt-1">Hung Trinh AI — Tháng 6/2026</p>
+        <p className="font-body-md text-slate-subtext mt-1">Hung Trinh AI</p>
       </div>
 
-      {/* KPI Cards — 2 cols on mobile, 4 on md+; tighter padding on mobile */}
+      {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter">
-        {Object.values(mockStats).map((stat) => (
+        {kpis.map((stat) => (
           <div key={stat.label} className="glass-card rounded-xl p-4 sm:p-6 space-y-2">
             <p className="font-label-eyebrow text-label-eyebrow text-slate-subtext/60 uppercase">{stat.label}</p>
             <p className="text-2xl font-black text-ink-text">{stat.value}</p>
-            <p className={`font-body-md text-sm flex items-center gap-1 ${stat.trend === "up" ? "text-green-600" : "text-error"}`}>
-              <span className="material-symbols-outlined text-sm">{stat.trend === "up" ? "trending_up" : "trending_down"}</span>
-              {stat.change} so với tháng trước
-            </p>
+            {stat.change && (
+              <p className={`font-body-md text-sm flex items-center gap-1 ${stat.trend === "up" ? "text-green-600" : "text-error"}`}>
+                <span className="material-symbols-outlined text-sm">{stat.trend === "up" ? "trending_up" : "trending_down"}</span>
+                {stat.change} so với tháng trước
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -30,12 +65,10 @@ export default async function AdminDashboard({ params }) {
         {/* Revenue Chart */}
         <div className="glass-card rounded-xl p-6 space-y-4">
           <h3 className="font-headline-sub text-headline-sub text-ink-text">Doanh thu 6 tháng (triệu đ)</h3>
-          {/* overflow-x-auto + min-w ensures bars never collapse below readable size */}
           <div className="overflow-x-auto">
             <div className="flex flex-col gap-2 min-w-[300px]">
-              {/* Bars container */}
               <div className="flex items-end gap-2 h-32">
-                {mockChartData.map((d) => (
+                {stats.revenueByMonth.map((d) => (
                   <div key={d.month} className="flex-1 min-w-[32px] h-full flex items-end">
                     <div
                       className="w-full bg-primary-container/80 rounded-t-lg transition-all duration-500 hover:bg-primary-container"
@@ -45,9 +78,8 @@ export default async function AdminDashboard({ params }) {
                   </div>
                 ))}
               </div>
-              {/* Labels row */}
               <div className="flex gap-2">
-                {mockChartData.map((d) => (
+                {stats.revenueByMonth.map((d) => (
                   <span key={d.month} className="flex-1 min-w-[32px] font-label-eyebrow text-label-eyebrow text-slate-subtext/60 uppercase truncate text-center">
                     {d.month}
                   </span>
@@ -61,12 +93,15 @@ export default async function AdminDashboard({ params }) {
         <div className="glass-card rounded-xl p-6 space-y-5">
           <div className="flex justify-between items-center">
             <h3 className="font-headline-sub text-headline-sub text-ink-text">Hiệu suất chiến dịch</h3>
-            <Link href={`/${lang}/admin/campaigns`} className="font-button-text text-button-text text-primary-container text-sm hover:underline">
-              Quản lý Email
+            <Link href={`/${lang}/admin/leads`} className="font-button-text text-button-text text-primary-container text-sm hover:underline">
+              Quản lý CRM
             </Link>
           </div>
           <div className="space-y-4">
-            {mockCampaigns.map((c) => (
+            {stats.campaigns.length === 0 && (
+              <p className="font-body-md text-slate-subtext/50 text-sm">Chưa có dữ liệu chiến dịch.</p>
+            )}
+            {stats.campaigns.map((c) => (
               <div key={c.name} className="space-y-1.5">
                 <div className="flex justify-between items-center">
                   <span className="font-body-md text-slate-subtext text-sm">{c.name}</span>
@@ -74,7 +109,7 @@ export default async function AdminDashboard({ params }) {
                 </div>
                 <div className="w-full h-2 bg-mist-bg rounded-full overflow-hidden">
                   <div
-                    className={`h-full ${c.color} rounded-full transition-all duration-700`}
+                    className="h-full bg-primary-container rounded-full transition-all duration-700"
                     style={{ width: `${c.percent}%` }}
                   />
                 </div>
@@ -93,12 +128,16 @@ export default async function AdminDashboard({ params }) {
           </Link>
         </div>
         <div className="divide-y divide-border-subtle">
-          {mockTransactions.slice(0, 5).map((tx) => (
-            // Stack vertically on mobile, row on sm+
+          {stats.recentTransactions.length === 0 && (
+            <p className="px-6 py-8 font-body-md text-slate-subtext/50 text-sm text-center">Chưa có giao dịch nào.</p>
+          )}
+          {stats.recentTransactions.map((tx) => (
             <div key={tx.id} className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-4 gap-3 hover:bg-mist-bg transition-colors">
               <div className="min-w-0">
                 <p className="font-button-text text-ink-text text-sm truncate">{tx.name}</p>
-                <p className="font-body-md text-slate-subtext text-xs truncate">{tx.course} • {tx.time} {tx.date}</p>
+                <p className="font-body-md text-slate-subtext text-xs truncate">
+                  {tx.itemType} • {tx.date ? new Date(tx.date).toLocaleDateString("vi-VN") : ""}
+                </p>
               </div>
               <div className="flex items-center gap-4 shrink-0">
                 <p className="font-button-text text-ink-text">{tx.amount.toLocaleString("vi-VN")}đ</p>
