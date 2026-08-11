@@ -8,6 +8,7 @@ import { signOut } from "../auth/actions";
 const sidebarItems = [
   { icon: "dashboard", label: "Tổng quan", href: "" },
   { icon: "group", label: "Quản lý CRM", href: "/leads" },
+  { icon: "event", label: "Quản lý Webinar", href: "/webinars" },
   { icon: "campaign", label: "Email Marketing & Chiến dịch", href: "/campaigns" },
   { icon: "article", label: "Quản lý nội dung", href: "/blog" },
   { icon: "school", label: "Quản lý khóa học", href: "/courses" },
