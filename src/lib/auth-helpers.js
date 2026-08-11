@@ -17,3 +17,14 @@ export function roleHomePath(lang, role) {
 export function isStaffRole(role) {
   return STAFF_ROLES.includes(role);
 }
+
+/**
+ * Validate a `?next=` redirect target so it can only ever point back into
+ * this app (`/vi/...` or `/en/...`), never to an external host — guards
+ * against open-redirect via a tampered/phished login link.
+ */
+export function safeNextPath(next) {
+  if (typeof next !== "string") return null;
+  if (!/^\/(vi|en)\//.test(next)) return null;
+  return next;
+}

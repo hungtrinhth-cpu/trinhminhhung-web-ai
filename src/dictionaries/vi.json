@@ -75,6 +75,17 @@
     "stat2_value": "20+",
     "stat2_label": "Dự án chuyển giao"
   },
+  "webinar": {
+    "learn_what": "Bạn sẽ học được gì?",
+    "curriculum": "Chương trình học",
+    "register_cta": "Đăng ký ngay",
+    "seats_left": "Còn",
+    "seats_of": "chỗ",
+    "early_bird": "Early Bird",
+    "refund_note": "Hoàn tiền 100% trong vòng 24h nếu không hài lòng",
+    "bottom_cta_title": "chỗ — Đừng bỏ lỡ!",
+    "bottom_cta_sub": "Giá Early Bird kết thúc khi hết chỗ."
+  },
   "footer": {
     "newsletter_title": "Đăng ký nhận kiến thức AI miễn phí",
     "newsletter_sub": "Mỗi tuần một bài học AI thực chiến, gửi thẳng vào hộp thư của bạn.",

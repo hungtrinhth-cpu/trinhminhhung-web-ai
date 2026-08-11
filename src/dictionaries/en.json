@@ -75,6 +75,17 @@
     "stat2_value": "20+",
     "stat2_label": "Transfer Projects"
   },
+  "webinar": {
+    "learn_what": "What you'll learn",
+    "curriculum": "Curriculum",
+    "register_cta": "Register now",
+    "seats_left": "Only",
+    "seats_of": "seats left of",
+    "early_bird": "Early Bird",
+    "refund_note": "100% refund within 24h if you're not satisfied",
+    "bottom_cta_title": "seats left — Don't miss out!",
+    "bottom_cta_sub": "Early Bird pricing ends when seats run out."
+  },
   "footer": {
     "newsletter_title": "Subscribe for free AI insights",
     "newsletter_sub": "One practical AI lesson every week, delivered straight to your inbox.",

@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
-import { roleHomePath } from '@/lib/auth-helpers'
+import { roleHomePath, safeNextPath } from '@/lib/auth-helpers'
 
 function safeLang(lang) {
   return lang === 'en' ? 'en' : 'vi'
@@ -26,6 +26,14 @@ export async function login(formData) {
     return { error: error.message }
   }
 
+  revalidatePath('/', 'layout')
+
+  // Deep link (e.g. back to a webinar checkout) wins over the role default.
+  const next = safeNextPath(formData.get('next'))
+  if (next) {
+    redirect(next)
+  }
+
   // Look up role to decide where to land.
   const { data: profile } = await supabase
     .from('profiles')
@@ -33,7 +41,6 @@ export async function login(formData) {
     .eq('id', data.user.id)
     .single()
 
-  revalidatePath('/', 'layout')
   redirect(roleHomePath(lang, profile?.role ?? 'student'))
 }
 
@@ -59,23 +66,26 @@ export async function signup(formData) {
   }
 
   revalidatePath('/', 'layout')
-  // New users are students by default → portal.
-  redirect(`/${lang}/portal`)
+  // Deep link (e.g. back to a webinar checkout) wins; otherwise new users
+  // are students by default → portal.
+  const next = safeNextPath(formData.get('next'))
+  redirect(next || `/${lang}/portal`)
 }
 
 /**
  * Google OAuth. Returns a URL the client must navigate to; the OAuth provider
- * then bounces back to /[lang]/auth/callback.
+ * then bounces back to /[lang]/auth/callback, which honors `next` itself.
  */
-export async function signInWithGoogle(lang) {
+export async function signInWithGoogle(lang, next) {
   const safe = safeLang(lang)
   const supabase = await createClient()
   const origin = (await headers()).get('origin')
+  const safeNext = safeNextPath(next)
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${origin}/${safe}/auth/callback`,
+      redirectTo: `${origin}/${safe}/auth/callback${safeNext ? `?next=${encodeURIComponent(safeNext)}` : ''}`,
     },
   })
 

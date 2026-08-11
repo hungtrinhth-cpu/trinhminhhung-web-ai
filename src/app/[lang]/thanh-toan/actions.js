@@ -1,7 +1,9 @@
 'use server'
 
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { buildVietQRUrl, buildOrderCode, VIETQR_ACCOUNT, VIETQR_BANK } from '@/lib/vietqr'
+import { safeNextPath } from '@/lib/auth-helpers'
 
 /**
  * Start a checkout: create a pending subscription + payment order for the
@@ -11,8 +13,9 @@ import { buildVietQRUrl, buildOrderCode, VIETQR_ACCOUNT, VIETQR_BANK } from '@/l
  * @param {"webinar"|"course"} opts.itemType
  * @param {string} opts.itemId
  * @param {number} opts.amount
+ * @param {object} [opts.metadata] - tracking data (ref/utm_*) to store on the order
  */
-export async function createCheckout({ itemType, itemId, amount }) {
+export async function createCheckout({ itemType, itemId, amount, metadata }) {
   const supabase = await createClient()
   const {
     data: { user },
@@ -59,6 +62,8 @@ export async function createCheckout({ itemType, itemId, amount }) {
     .insert({
       subscription_id: subscriptionId,
       user_id: user.id,
+      item_type: itemType,
+      item_id: itemId,
       order_code: orderCode,
       amount,
       description: orderCode,
@@ -67,6 +72,7 @@ export async function createCheckout({ itemType, itemId, amount }) {
       bank_code: VIETQR_BANK,
       payment_gateway: 'vietqr',
       status: 'pending',
+      metadata: metadata ?? {},
     })
     .select('id')
     .single()
@@ -86,4 +92,45 @@ export async function getCheckoutStatus(orderId) {
     .eq('id', orderId)
     .single()
   return { status: data?.status ?? 'unknown' }
+}
+
+/**
+ * Webinar registration CTA. Bound from the webinar page with the webinar's
+ * own id/price/current-URL, so it needs no form fields of its own.
+ *
+ * - Not signed in → bounce to login, `next` brings the visitor straight back
+ *   to this same webinar URL (tracking params included) to try again.
+ * - Signed in → create the order and land on the real checkout page.
+ *
+ * @param {object} opts
+ * @param {string} opts.webinarId
+ * @param {number} opts.amount
+ * @param {string} opts.lang
+ * @param {string} opts.currentPath - the webinar page path+query to return to
+ * @param {object} opts.tracking - ref/utm_* pulled from the webinar page URL
+ */
+export async function registerForWebinar({ webinarId, amount, lang, currentPath, tracking }) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    const next = safeNextPath(currentPath) ?? `/${lang}/webinar`
+    redirect(`/${lang}/auth/login?next=${encodeURIComponent(next)}`)
+  }
+
+  const result = await createCheckout({
+    itemType: 'webinar',
+    itemId: webinarId,
+    amount,
+    metadata: tracking,
+  })
+
+  if (result?.error) {
+    const separator = currentPath.includes('?') ? '&' : '?'
+    redirect(`${currentPath}${separator}checkout_error=1`)
+  }
+
+  redirect(`/${lang}/thanh-toan/${result.orderId}`)
 }
