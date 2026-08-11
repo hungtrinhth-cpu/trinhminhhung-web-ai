@@ -95,3 +95,54 @@ Các bảng và chính sách được thiết kế chuẩn xác để tuân th�
     *   Học viên nhập email Google vào form đăng ký và mật khẩu mới.
     *   Supabase sẽ phát hiện email này đã tồn tại và gửi email xác nhận.
     *   Sau khi xác nhận mật khẩu, Supabase liên kết phương thức đăng nhập bằng mật khẩu (Password Identity) vào `user_id` hiện tại của tài khoản Google đó. Học viên có thể đăng nhập bằng cả hai cách.
+
+---
+
+## 6. Schema Bổ Sung: Webinar & Payment Orders
+
+> Migration này **chạy sau** `supabase_schema.sql` (mục 4) — sống trong file riêng [supabase_schema_webinar_payments.sql](./supabase_schema_webinar_payments.sql), không sửa lại nội dung `schema.sql` gốc. Đã chạy thủ công trên Supabase SQL Editor và **test pass thật** với dữ liệu thật (slice "webinar checkout").
+
+### 6.1. Bảng `public.webinars`
+
+Nội dung landing page webinar (title, mô tả, giảng viên, lịch, giá, curriculum...).
+
+| Cột | Kiểu | Ghi chú |
+|---|---|---|
+| `id` | uuid, PK | `gen_random_uuid()` |
+| `slug` | text, unique | dùng cho URL `/webinar/[slug]` |
+| `title`, `subtitle` | text | |
+| `instructor`, `instructor_title`, `instructor_bio` | text | |
+| `scheduled_at` | timestamptz | |
+| `duration_min` | integer | |
+| `format`, `level` | text | |
+| `price`, `original_price` | numeric(12,2) | |
+| `seats_total`, `seats_left` | integer | chỉnh tay; **chưa có trigger tự động giảm** khi có đơn thanh toán thành công |
+| `thumbnail_url` | text | |
+| `tags`, `highlights`, `curriculum` | jsonb | `tags`/`highlights` là mảng string; `curriculum` là mảng object `{id, title, duration, type}` |
+| `status` | text, check | `draft` \| `published` \| `closed`, mặc định `draft` |
+
+### 6.2. Bảng `public.payment_orders`
+
+Đơn thanh toán VietQR — liên kết trực tiếp tới item được mua qua `item_type`/`item_id` (không bắt buộc phải có `subscription_id`, cột này để nullable).
+
+| Cột | Kiểu | Ghi chú |
+|---|---|---|
+| `id` | uuid, PK | |
+| `subscription_id` | uuid, nullable, FK → `subscriptions.id` | |
+| `user_id` | uuid, FK → `profiles.id` | |
+| `item_type` | text, check | `webinar` \| `course` \| `subscription` |
+| `item_id` | uuid | không có ràng buộc FK cứng (bảng đích tùy theo `item_type`) |
+| `order_code` | text, unique | mã đối soát trong nội dung chuyển khoản |
+| `amount` | numeric(12,2) | |
+| `qr_url`, `bank_account`, `bank_code`, `payment_gateway` | text | |
+| `status` | text, check | `pending` \| `paid` \| `failed` \| `expired` |
+| `metadata` | jsonb | lưu tracking `ref`/`utm_source`/`utm_medium`/`utm_campaign` từ sublink đăng ký |
+| `webhook_payload` | jsonb | payload thô từ webhook PayOS/Casso khi khớp đơn |
+| `paid_at`, `created_at`, `updated_at` | timestamptz | |
+
+### 6.3. RLS Policies
+
+Dùng lại helper `public.get_user_role()` đã định nghĩa ở mục 2.1.
+
+*   **`webinars`** — SELECT: `status = 'published'` HOẶC role `admin`/`team_leader` (xem cả bản nháp). INSERT/UPDATE/DELETE: chỉ role `admin`.
+*   **`payment_orders`** — SELECT: chủ đơn (`user_id = auth.uid()`) HOẶC role `admin`/`team_leader`. INSERT: chủ đơn hoặc `admin`. UPDATE/DELETE: chỉ `admin` (webhook server dùng service-role client — `createAdminClient()` — nên tự bypass RLS, không cần policy riêng cho webhook).

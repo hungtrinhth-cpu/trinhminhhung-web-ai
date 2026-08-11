@@ -131,3 +131,13 @@ Dự án sẽ được triển khai đồng bộ tất cả các tính năng tro
 1. **Kiểm thử Thu Lead**: Điền form quà tặng, kiểm tra lưu dữ liệu Supabase, email tự động gửi link quà tặng và chuyển hướng nhóm Zalo cá nhân.
 2. **Kiểm thử Webinar & Thanh toán**: Đăng ký webinar -> Quét VietQR thanh toán -> Webhook tự động đổi trạng thái đơn, đồng bộ sang Google Sheets, gửi email vé Zoom, mời vào nhóm Zalo kín, gửi thông báo Telegram cho Admin.
 3. **Kiểm thử Portal**: Đăng nhập qua Google/Apple/Email Magic Link, kiểm tra phân quyền xem video record, kiểm tra cấu trúc mini course và chatbot hỗ trợ học tập.
+
+---
+
+## 7. Trạng Thái Triển Khai (Implementation Status)
+
+*Tài liệu PRD gốc phía trên giữ nguyên không chỉnh sửa. Mục này chỉ ghi nhận tiến độ thực tế — xem chi tiết đầy đủ từng hạng mục tại [FEATURE_LIST.md](./FEATURE_LIST.md).*
+
+- **Đã hoàn thành** (slice "webinar checkout"): Landing page webinar load theo slug thật (không còn mock), CTA đăng ký tạo đơn `payment_orders` thật, tracking `ref`/`utm_*` từ sublink được lưu vào `payment_orders.metadata`.
+- **Schema bổ sung**: bảng `webinars` + `payment_orders` đã tạo và chạy thật trên Supabase — xem [SUPABASE_DESIGN.md §6](./SUPABASE_DESIGN.md#6-schema-bổ-sung-webinar--payment-orders).
+- **Chưa hoàn thành**: ảnh VietQR thật và webhook PayOS/Casso chưa test end-to-end (thiếu cấu hình env `NEXT_PUBLIC_VIETQR_*`); Google OAuth chưa bật ở Supabase (nút đăng nhập Google đang ẩn qua feature flag `NEXT_PUBLIC_AUTH_GOOGLE_ENABLED`); Course/LMS, Blog CMS, Admin CMS nội dung, Tracking/Funnel reporting vẫn ở trạng thái mock hoặc chưa bắt đầu.

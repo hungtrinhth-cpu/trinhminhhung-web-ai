@@ -13,10 +13,12 @@ Danh sách tính năng trích từ [PRD.md](./PRD.md) (Mục 5), tổ chức d�
 | # | Tính năng | Mô tả | Tech Stack | Ưu tiên | Trạng thái |
 |---|-----------|-------|-----------|:------:|:----------:|
 | 0.1 | Schema CSDL cốt lõi | 10 bảng CRM/Auth (`profiles`, `teams`, `leads`, `lead_lists`, `pipeline_stages`...) | Supabase / PostgreSQL | P0 | ✅ |
-| 0.2 | Schema nội dung | 6 bảng (`webinars`, `courses`, `lessons`, `lesson_progress`, `blog_posts`, `payment_orders`) | Supabase | P0 | 🔒 Chờ chạy Script 2 |
+| 0.2 | Schema nội dung | 6 bảng (`webinars`, `courses`, `lessons`, `lesson_progress`, `blog_posts`, `payment_orders`) | Supabase | P0 | 🟡 2/6 đã tạo |
 | 0.3 | RLS & phân quyền | Row Level Security 4 vai trò: admin / team_leader / sales / student | Supabase RLS | P0 | ✅ |
 | 0.4 | Trigger đồng bộ profile | Tự tạo `profiles` từ `auth.users`, không ghi đè role | Postgres trigger | P0 | ✅ |
-| 0.5 | Cấu hình Auth Provider | Bật Google OAuth + Email, tắt xác thực email, Identity linking | Supabase Dashboard | P0 | 🟡 Email/pass OK, cần bật Google + tắt confirm |
+| 0.5 | Cấu hình Auth Provider | Bật Google OAuth + Email, tắt xác thực email, Identity linking | Supabase Dashboard | P0 | 🟡 Email/pass OK; Google OAuth chưa bật ở Supabase — UI đang ẩn nút Google qua `NEXT_PUBLIC_AUTH_GOOGLE_ENABLED` (mặc định tắt) |
+
+> Ghi chú: bảng `webinars` và `payment_orders` (2/6) đã được tạo qua file migration bổ sung [`supabase_schema_webinar_payments.sql`](./supabase_schema_webinar_payments.sql) — chạy **sau** `supabase_schema.sql`, đã chạy thủ công trên Supabase SQL Editor và **test pass thật** (xem slice "webinar checkout"). 4 bảng còn lại (`courses`, `lessons`, `lesson_progress`, `blog_posts`) chưa tạo.
 
 ---
 
@@ -25,7 +27,7 @@ Danh sách tính năng trích từ [PRD.md](./PRD.md) (Mục 5), tổ chức d�
 | # | Tính năng | Mô tả | Tech Stack | Ưu tiên | Trạng thái |
 |---|-----------|-------|-----------|:------:|:----------:|
 | 1.1 | Đăng nhập Email/Mật khẩu | Form đăng nhập + đăng ký truyền thống | Supabase Auth | P0 | ✅ |
-| 1.2 | Đăng nhập Google OAuth | Nút "Tiếp tục với Google" | Supabase OAuth | P0 | ✅ (cần bật provider) |
+| 1.2 | Đăng nhập Google OAuth | Nút "Tiếp tục với Google" | Supabase OAuth | P0 | 🟡 Code sẵn sàng, đang ẩn qua `NEXT_PUBLIC_AUTH_GOOGLE_ENABLED=false` tới khi bật provider thật trong Supabase |
 | 1.3 | Đăng nhập Apple / Magic Link | OAuth Apple + đăng nhập không mật khẩu | Supabase Auth | P1 | ⏳ |
 | 1.4 | Redirect theo vai trò | Staff → /admin, Học viên → /portal | Next.js + helper | P0 | ✅ |
 | 1.5 | Bảo vệ route (guard) | Chặn /admin (staff), /portal (đăng nhập) qua middleware | Next.js Proxy | P0 | ✅ |
@@ -57,7 +59,7 @@ Danh sách tính năng trích từ [PRD.md](./PRD.md) (Mục 5), tổ chức d�
 | 3.2 | Cấu hình Đa ngôn ngữ | Middleware `/[lang]/`, từ điển vi.json/en.json, cookie | Next.js i18n | P0 | ✅ |
 | 3.3 | Blog SEO (danh sách) | Danh sách bài viết, fallback khi DB rỗng | Supabase query | P1 | ✅ |
 | 3.4 | Blog SEO (chi tiết) | Trang bài viết, render nội dung, metadata SEO | Next.js | P1 | ✅ 🔒 |
-| 3.5 | Landing Page Webinar | Trang giới thiệu webinar, sticky card mua vé | Dynamic Routes | P0 | 🟡 UI có, query sẵn |
+| 3.5 | Landing Page Webinar | Trang giới thiệu webinar theo slug thật (không còn mock), sticky card mua vé, CTA nối checkout thật | Dynamic Routes | P0 | ✅ |
 | 3.6 | Trang Khóa học | Catalog khóa học, trang chi tiết | Supabase query | P1 | 🟡 query sẵn, chờ data |
 | 3.7 | Quản lý nội dung (Admin) | CRUD blog/khóa học/webinar trong admin | Supabase | P1 | ⏳ |
 
@@ -79,9 +81,9 @@ Danh sách tính năng trích từ [PRD.md](./PRD.md) (Mục 5), tổ chức d�
 
 | # | Tính năng | Mô tả | Tech Stack | Ưu tiên | Trạng thái |
 |---|-----------|-------|-----------|:------:|:----------:|
-| 5.1 | Checkout VietQR động | Sinh QR + mã chuyển khoản duy nhất, đếm ngược 15 phút | VietQR API | P0 | ✅ 🔒 |
-| 5.2 | Tạo đơn (subscription + order) | Server action tạo đăng ký + payment_order | Supabase | P0 | ✅ 🔒 |
-| 5.3 | Webhook thanh toán | Nhận callback PayOS/Casso → tự đổi trạng thái "Đã thanh toán" | PayOS/Casso | P0 | ✅ 🔒 |
+| 5.1 | Checkout VietQR động | Sinh QR + mã chuyển khoản duy nhất, đếm ngược 15 phút | VietQR API | P0 | 🟡 Logic đơn hàng đã test thật; ảnh QR thật chưa hiện vì thiếu `NEXT_PUBLIC_VIETQR_BANK/ACCOUNT/NAME` trong `.env.local` |
+| 5.2 | Tạo đơn (subscription + order) | Server action tạo đăng ký + payment_order | Supabase | P0 | ✅ Đã test thật trên Supabase (tạo `subscriptions` + `payment_orders` thành công) |
+| 5.3 | Webhook thanh toán | Nhận callback PayOS/Casso → tự đổi trạng thái "Đã thanh toán" | PayOS/Casso | P0 | 🟡 Code sẵn sàng, chưa test với webhook thật từ gateway |
 | 5.4 | Polling trạng thái | Trang QR tự kiểm tra mỗi 5s, hiện màn hình thành công | React | P0 | ✅ |
 | 5.5 | Nhóm Zalo lớp học | Popup mời vào Zalo kín sau khi thanh toán | Zalo link | P0 | ✅ |
 | 5.6 | Gửi vé Zoom (email) | Mail tự động chứa vé + link Zoom sau thanh toán | Resend API | P0 | 🟡 hạ tầng email sẵn |
@@ -106,13 +108,13 @@ Danh sách tính năng trích từ [PRD.md](./PRD.md) (Mục 5), tổ chức d�
 
 | Phase | Tổng tính năng | ✅ Xong | 🟡 Một phần | ⏳ Chưa | Ghi chú |
 |-------|:---:|:---:|:---:|:---:|---------|
-| 0 — Foundation | 5 | 3 | 1 | 0 | Chạy Script 2 + bật Google OAuth |
-| 1 — Auth | 7 | 6 | 0 | 1 | Còn Apple/Magic Link (P1) |
+| 0 — Foundation | 5 | 3 | 2 | 0 | 2/6 bảng nội dung đã tạo (`webinars`, `payment_orders`); còn Google OAuth + 4 bảng nội dung |
+| 1 — Auth | 7 | 5 | 1 | 1 | Google OAuth ẩn qua feature flag; còn Apple/Magic Link (P1) |
 | 2 — Admin CRM | 8 | 8 | 0 | 0 | Hoàn chỉnh |
-| 3 — Public Content | 7 | 3 | 2 | 2 | Cần admin CMS + seed data |
+| 3 — Public Content | 7 | 5 | 1 | 1 | Webinar xong; cần admin CMS + seed data khóa học |
 | 4 — Portal | 5 | 3 | 0 | 2 | Video bảo mật + AI Assistant (P2) |
-| 5 — Payment | 7 | 5 | 1 | 1 | Còn Google Sheets sync |
+| 5 — Payment | 7 | 3 | 3 | 1 | Tạo đơn thật OK; QR ảnh + webhook thật chưa test; còn Google Sheets sync |
 | 6 — Lead & Notify | 6 | 5 | 0 | 1 | Còn landing page riêng |
 
-> 🔒 = code đã xong, chỉ chờ **Phase 0** (chạy Script 2 SQL + cấu hình env) để chạy thật.
+> 🔒 (còn lại trong bảng, ví dụ mục 3.4/4.x) = code đã xong, chỉ chờ 4 bảng nội dung còn thiếu (`courses`, `lessons`, `lesson_progress`, `blog_posts`) để chạy thật. Slice "webinar checkout" đã unlock `webinars`/`payment_orders`.
 > Chi tiết kỹ thuật từng phase: xem Implementation Plan trong lịch sử chat hoặc memory dự án.
