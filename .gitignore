@@ -49,3 +49,6 @@ mockups/
 z787*.jpg
 z796*.jpg
 Anh Hung.jpg
+
+# local test fixtures (sample lead data, not for commit)
+mau-khach-hang.csv
