@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
-import { useActionState } from "react";
-import { login, signInWithGoogle } from "../actions";
+import { useActionState, useState } from "react";
+import { login, signInWithGoogle, signInWithMagicLink } from "../actions";
 
 const GOOGLE_ENABLED = process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true";
 
@@ -17,8 +17,14 @@ export default function LoginPage() {
     ? `/${lang}/auth/register?next=${encodeURIComponent(next)}`
     : `/${lang}/auth/register`;
 
+  const [mode, setMode] = useState("password"); // "password" | "magic"
+
   const [state, formAction, isPending] = useActionState(
     async (_prev, formData) => await login(formData),
+    null
+  );
+  const [magicState, magicFormAction, magicPending] = useActionState(
+    async (_prev, formData) => await signInWithMagicLink(formData),
     null
   );
 
@@ -36,6 +42,11 @@ export default function LoginPage() {
         noAccount: "Don't have an account?",
         register: "Register now",
         callbackError: "Sign-in failed. Please try again.",
+        useMagicLink: "Sign in with email link instead (no password)",
+        usePassword: "Use password instead",
+        magicSubmit: "Send sign-in link",
+        magicSubmitting: "Sending...",
+        magicSuccess: "Check your inbox — we sent a sign-in link to your email.",
       }
     : {
         eyebrow: "Cổng Học Viên",
@@ -50,6 +61,11 @@ export default function LoginPage() {
         noAccount: "Chưa có tài khoản?",
         register: "Đăng ký ngay",
         callbackError: "Đăng nhập thất bại. Vui lòng thử lại.",
+        useMagicLink: "Đăng nhập bằng link qua email (không cần mật khẩu)",
+        usePassword: "Dùng mật khẩu thay thế",
+        magicSubmit: "Gửi link đăng nhập",
+        magicSubmitting: "Đang gửi...",
+        magicSuccess: "Đã gửi link đăng nhập tới email của bạn. Vui lòng kiểm tra hộp thư.",
       };
 
   return (
@@ -106,43 +122,110 @@ export default function LoginPage() {
             </>
           )}
 
-          {/* Email/password form */}
-          <form action={formAction} className="space-y-5">
-            <input type="hidden" name="lang" value={lang} />
-            <input type="hidden" name="next" value={next ?? ""} />
-            <div className="space-y-1">
-              <label className="font-label-eyebrow text-label-eyebrow text-ink-text/50 uppercase">{t.email}</label>
-              <input
-                type="email"
-                name="email"
-                required
-                placeholder="example@gmail.com"
-                className="w-full border-0 border-b border-border-subtle bg-transparent py-3 font-body-lg text-ink-text placeholder:text-ink-text/20 focus:outline-none focus:border-primary-container transition-all"
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="font-label-eyebrow text-label-eyebrow text-ink-text/50 uppercase">{t.password}</label>
-              <input
-                type="password"
-                name="password"
-                required
-                placeholder="••••••••"
-                className="w-full border-0 border-b border-border-subtle bg-transparent py-3 font-body-lg text-ink-text placeholder:text-ink-text/20 focus:outline-none focus:border-primary-container transition-all"
-              />
-            </div>
+          {mode === "password" ? (
+            <>
+              {/* Email/password form */}
+              <form action={formAction} className="space-y-5">
+                <input type="hidden" name="lang" value={lang} />
+                <input type="hidden" name="next" value={next ?? ""} />
+                <div className="space-y-1">
+                  <label className="font-label-eyebrow text-label-eyebrow text-ink-text/50 uppercase">{t.email}</label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    placeholder="example@gmail.com"
+                    className="w-full border-0 border-b border-border-subtle bg-transparent py-3 font-body-lg text-ink-text placeholder:text-ink-text/20 focus:outline-none focus:border-primary-container transition-all"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="font-label-eyebrow text-label-eyebrow text-ink-text/50 uppercase">{t.password}</label>
+                  <input
+                    type="password"
+                    name="password"
+                    required
+                    placeholder="••••••••"
+                    className="w-full border-0 border-b border-border-subtle bg-transparent py-3 font-body-lg text-ink-text placeholder:text-ink-text/20 focus:outline-none focus:border-primary-container transition-all"
+                  />
+                </div>
 
-            {state?.error && (
-              <div className="text-error text-sm text-center">{state.error}</div>
-            )}
+                {state?.error && (
+                  <div className="text-error text-sm text-center">{state.error}</div>
+                )}
 
-            <button
-              type="submit"
-              disabled={isPending}
-              className="w-full py-4 bg-primary-container text-white rounded-full font-button-text text-button-text uppercase tracking-[0.1em] hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-lg shadow-primary-container/20 disabled:opacity-60 disabled:hover:scale-100"
-            >
-              {isPending ? t.submitting : t.submit}
-            </button>
-          </form>
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="w-full py-4 bg-primary-container text-white rounded-full font-button-text text-button-text uppercase tracking-[0.1em] hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-lg shadow-primary-container/20 disabled:opacity-60 disabled:hover:scale-100"
+                >
+                  {isPending ? t.submitting : t.submit}
+                </button>
+              </form>
+
+              <button
+                type="button"
+                onClick={() => setMode("magic")}
+                className="w-full text-center font-body-md text-sm text-primary-container hover:underline"
+              >
+                {t.useMagicLink}
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Magic link (passwordless) form */}
+              {magicState?.ok ? (
+                <div className="text-center space-y-4 py-2">
+                  <div className="text-primary-container text-sm bg-primary-container/5 border border-primary-container/20 rounded-lg py-3 px-3">
+                    {t.magicSuccess}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setMode("password")}
+                    className="font-body-md text-sm text-primary-container hover:underline"
+                  >
+                    {t.usePassword}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <form action={magicFormAction} className="space-y-5">
+                    <input type="hidden" name="lang" value={lang} />
+                    <input type="hidden" name="next" value={next ?? ""} />
+                    <div className="space-y-1">
+                      <label className="font-label-eyebrow text-label-eyebrow text-ink-text/50 uppercase">{t.email}</label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        placeholder="example@gmail.com"
+                        className="w-full border-0 border-b border-border-subtle bg-transparent py-3 font-body-lg text-ink-text placeholder:text-ink-text/20 focus:outline-none focus:border-primary-container transition-all"
+                      />
+                    </div>
+
+                    {magicState?.error && (
+                      <div className="text-error text-sm text-center">{magicState.error}</div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={magicPending}
+                      className="w-full py-4 bg-primary-container text-white rounded-full font-button-text text-button-text uppercase tracking-[0.1em] hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-lg shadow-primary-container/20 disabled:opacity-60 disabled:hover:scale-100"
+                    >
+                      {magicPending ? t.magicSubmitting : t.magicSubmit}
+                    </button>
+                  </form>
+
+                  <button
+                    type="button"
+                    onClick={() => setMode("password")}
+                    className="w-full text-center font-body-md text-sm text-primary-container hover:underline"
+                  >
+                    {t.usePassword}
+                  </button>
+                </>
+              )}
+            </>
+          )}
         </div>
 
         <p className="text-center font-body-md text-slate-subtext/60 mt-6 text-sm">

@@ -98,6 +98,32 @@ export async function signInWithGoogle(lang, next) {
   }
 }
 
+/**
+ * Passwordless sign-in: emails a magic link. Same callback route as Google
+ * OAuth handles it — Supabase's magic link uses the same PKCE `?code=`
+ * redirect exchangeCodeForSession() already expects.
+ */
+export async function signInWithMagicLink(formData) {
+  const lang = safeLang(formData.get('lang'))
+  const supabase = await createClient()
+  const origin = (await headers()).get('origin')
+  const next = safeNextPath(formData.get('next'))
+  const email = formData.get('email')
+
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: `${origin}/${lang}/auth/callback${next ? `?next=${encodeURIComponent(next)}` : ''}`,
+    },
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { ok: true }
+}
+
 export async function signOut(lang) {
   const safe = safeLang(lang)
   const supabase = await createClient()
