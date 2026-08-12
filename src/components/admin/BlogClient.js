@@ -23,6 +23,17 @@ export default function BlogClient({ initialPosts }) {
   const [isPending, startTransition] = useTransition();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("create");
+
+  // router.refresh() re-renders the parent Server Component and passes a new
+  // initialPosts prop, but useState's initializer only runs on first mount —
+  // without this sync-during-render, a newly created post never shows up
+  // until a full page reload. Adjusting state during render (not in an
+  // effect) per React's recommended pattern for this exact case.
+  const [prevInitialPosts, setPrevInitialPosts] = useState(initialPosts);
+  if (initialPosts !== prevInitialPosts) {
+    setPrevInitialPosts(initialPosts);
+    setPosts(initialPosts);
+  }
   const [editingPost, setEditingPost] = useState(null);
 
   function refresh() {

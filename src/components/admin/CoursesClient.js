@@ -31,6 +31,23 @@ export default function CoursesClient({ initialCourses, initialLessons }) {
   const [selectedCourseId, setSelectedCourseId] = useState(initialCourses[0]?.id ?? "");
   const [isPending, startTransition] = useTransition();
 
+  // router.refresh() re-renders the parent Server Component and passes new
+  // initialCourses/initialLessons props, but useState's initializer only
+  // runs on first mount — without this sync-during-render, a newly created
+  // course/lesson never shows up until a full page reload. Adjusting state
+  // during render (not in an effect) per React's recommended pattern for
+  // this exact case.
+  const [prevInitialCourses, setPrevInitialCourses] = useState(initialCourses);
+  if (initialCourses !== prevInitialCourses) {
+    setPrevInitialCourses(initialCourses);
+    setCourses(initialCourses);
+  }
+  const [prevInitialLessons, setPrevInitialLessons] = useState(initialLessons);
+  if (initialLessons !== prevInitialLessons) {
+    setPrevInitialLessons(initialLessons);
+    setLessons(initialLessons);
+  }
+
   const [courseModalOpen, setCourseModalOpen] = useState(false);
   const [courseModalMode, setCourseModalMode] = useState("create");
   const [editingCourse, setEditingCourse] = useState(null);
