@@ -11,9 +11,12 @@ function revalidateCampaigns() {
   revalidatePath('/[lang]/admin/campaigns', 'page')
 }
 
+// Real Resend API keys always start with "re_" — checking the actual key
+// format (not just one exact placeholder string) catches any placeholder/
+// truncated/garbage value, not just the literal ".env.example" text.
 function resendConfigured() {
   const key = process.env.RESEND_API_KEY
-  return !!key && key !== 'your_resend_api_key'
+  return !!key && key.startsWith('re_')
 }
 
 /**
