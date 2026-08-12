@@ -43,7 +43,7 @@ export async function getAllBlogPosts() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("id, slug, lang, title, status, category, published_at, created_at")
+    .select("*")
     .order("created_at", { ascending: false });
   if (error) {
     console.error("getAllBlogPosts error:", error.message);

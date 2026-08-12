@@ -8,6 +8,15 @@ const nextConfig = {
       { protocol: 'https', hostname: 'img.youtube.com' },
     ],
   },
+  // Dev-only: lets the dev server (HMR, Server Actions, static assets) be
+  // reached through a localtunnel tunnel for QA on other devices. loca.lt
+  // assigns a new random subdomain per session, hence the wildcard.
+  allowedDevOrigins: ['*.loca.lt'],
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['*.loca.lt'],
+    },
+  },
 };
 
 export default nextConfig;

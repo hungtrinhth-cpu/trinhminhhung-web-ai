@@ -70,7 +70,7 @@ export async function getAllCourses() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("courses")
-    .select("id, slug, title, level, price, status, created_at")
+    .select("*")
     .order("created_at", { ascending: false });
   if (error) {
     console.error("getAllCourses error:", error.message);
