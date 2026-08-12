@@ -113,5 +113,62 @@
     "hours": "Mon – Fri, 8:00 – 17:00",
     "copyright": "© 2026 Hung Trinh AI. All rights reserved.",
     "tagline": "AI Training • Consulting • Automation"
+  },
+  "privacy": {
+    "badge": "LEGAL",
+    "title": "Privacy Policy",
+    "updated_at": "Last updated: Aug 1, 2026",
+    "intro": "Hung Trinh AI respects and is committed to protecting your personal information. This policy explains how we collect, use, and protect your data when you use our website and services.",
+    "sections": [
+      { "heading": "1. Information We Collect", "body": "We collect information you provide directly, such as name, email, and phone number, when you create an account, register for a course/webinar, or submit a contact form on our website." },
+      { "heading": "2. How We Use Information", "body": "We use your information to provide our services (courses, webinars, student support), process payments, send account/order-related notifications, and improve our content quality." },
+      { "heading": "3. Information Sharing", "body": "We do not sell or rent your personal information to third parties. Information is only shared with service partners necessary to operate the website (payment processing, hosting infrastructure)." },
+      { "heading": "4. Data Security", "body": "Your data is stored on infrastructure with encryption and strict access controls. We apply reasonable technical measures to prevent unauthorized access." },
+      { "heading": "5. Your Rights", "body": "You have the right to request access, correction, or deletion of your personal information by contacting us via the email or phone number listed on the Contact page." },
+      { "heading": "6. Policy Changes", "body": "This policy may be updated from time to time. The latest version is always published on this page." }
+    ]
+  },
+  "terms": {
+    "badge": "LEGAL",
+    "title": "Terms of Service",
+    "updated_at": "Last updated: Aug 1, 2026",
+    "intro": "By accessing or using the Hung Trinh AI website, courses, or services, you agree to comply with the terms below.",
+    "sections": [
+      { "heading": "1. User Accounts", "body": "You are responsible for keeping your login credentials secure and for all activity under your account. Please notify us immediately if you notice any unauthorized access." },
+      { "heading": "2. Course Content", "body": "Course content, materials, and videos are the copyright of Hung Trinh AI. Students are granted a personal-use license and may not copy, share, or resell them in any form." },
+      { "heading": "3. Payment & Refunds", "body": "Tuition is paid before course access is granted. Refund policies (if applicable) are stated on the specific course or webinar detail page." },
+      { "heading": "4. Acceptable Use", "body": "You agree to use the website and services for their intended purpose and not to engage in behavior that harms the system or other users." },
+      { "heading": "5. Limitation of Liability", "body": "Hung Trinh AI strives to ensure service quality but does not guarantee uninterrupted or error-free service. We are not liable for indirect damages arising from the use of our services." },
+      { "heading": "6. Changes to Terms", "body": "We may update these terms from time to time. Continued use of the service after changes means you accept the new terms." },
+      { "heading": "7. Governing Law", "body": "These terms are governed by the laws of Vietnam." }
+    ]
+  },
+  "contact": {
+    "badge": "CONTACT",
+    "title": "Get In Touch",
+    "subtitle": "Have questions about a course, webinar, or need support? The Hung Trinh AI team is here to help.",
+    "info_title": "Contact Information",
+    "address_label": "Address",
+    "email_label": "Email",
+    "phone_label": "Phone",
+    "hours_label": "Business Hours",
+    "zalo_title": "Zalo Community",
+    "zalo_desc": "Join our Zalo group for quick support and the latest updates from Hung Trinh AI.",
+    "zalo_cta": "Join Zalo Group",
+    "email_cta": "Send Email",
+    "call_cta": "Call Now"
+  },
+  "faq": {
+    "badge": "FAQ",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Quick answers to common questions about our courses and services.",
+    "items": [
+      { "q": "What do I need to prepare before joining a course?", "a": "Just a device with an internet connection. Our courses are designed for beginners and require no prior technical knowledge." },
+      { "q": "What payment methods are supported?", "a": "We support bank transfer via the VietQR code shown directly on each course/webinar checkout page." },
+      { "q": "Where can I access my course after registering?", "a": "Once payment is confirmed, the course will appear under 'My Courses' in your student Portal." },
+      { "q": "Can I get a refund if I'm not satisfied?", "a": "Refund policies are specific to each course/webinar — please check the product page or contact us directly for details." },
+      { "q": "I forgot my password, what should I do?", "a": "You can log in with a Magic Link sent to your email from the login page — no password needed." },
+      { "q": "Where can I get further support?", "a": "You can reach us via the email or phone number on the Contact page, or join our Zalo community group for fast support." }
+    ]
   }
 }

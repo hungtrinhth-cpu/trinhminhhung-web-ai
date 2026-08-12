@@ -113,5 +113,62 @@
     "hours": "Thứ 2 – Thứ 6, 8:00 – 17:00",
     "copyright": "© 2026 Hung Trinh AI. All rights reserved.",
     "tagline": "AI Training • Consulting • Automation"
+  },
+  "privacy": {
+    "badge": "PHÁP LÝ",
+    "title": "Chính Sách Bảo Mật",
+    "updated_at": "Cập nhật lần cuối: 01/08/2026",
+    "intro": "Hung Trinh AI tôn trọng và cam kết bảo vệ thông tin cá nhân của bạn. Chính sách này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ dữ liệu khi bạn sử dụng website và dịch vụ của chúng tôi.",
+    "sections": [
+      { "heading": "1. Thông tin chúng tôi thu thập", "body": "Chúng tôi thu thập thông tin bạn cung cấp trực tiếp như họ tên, email, số điện thoại khi đăng ký tài khoản, đăng ký khóa học/webinar, hoặc để lại thông tin liên hệ qua các form trên website." },
+      { "heading": "2. Mục đích sử dụng thông tin", "body": "Thông tin được sử dụng để cung cấp dịch vụ (khóa học, webinar, hỗ trợ học viên), xử lý thanh toán, gửi thông báo liên quan đến tài khoản/đơn hàng, và cải thiện chất lượng nội dung." },
+      { "heading": "3. Chia sẻ thông tin", "body": "Chúng tôi không bán hoặc cho thuê thông tin cá nhân của bạn cho bên thứ ba. Thông tin chỉ được chia sẻ với các đối tác cung cấp dịch vụ cần thiết (thanh toán, hạ tầng lưu trữ) để vận hành website." },
+      { "heading": "4. Bảo mật dữ liệu", "body": "Dữ liệu của bạn được lưu trữ trên hạ tầng có mã hóa và kiểm soát truy cập nghiêm ngặt. Chúng tôi áp dụng các biện pháp kỹ thuật hợp lý để ngăn chặn truy cập trái phép." },
+      { "heading": "5. Quyền của bạn", "body": "Bạn có quyền yêu cầu xem, chỉnh sửa hoặc xóa thông tin cá nhân đã cung cấp bằng cách liên hệ với chúng tôi qua email hoặc số điện thoại tại trang Liên hệ." },
+      { "heading": "6. Thay đổi chính sách", "body": "Chính sách này có thể được cập nhật theo thời gian. Phiên bản mới nhất luôn được đăng tải tại trang này." }
+    ]
+  },
+  "terms": {
+    "badge": "PHÁP LÝ",
+    "title": "Điều Khoản Dịch Vụ",
+    "updated_at": "Cập nhật lần cuối: 01/08/2026",
+    "intro": "Khi truy cập và sử dụng website, khóa học hoặc dịch vụ của Hung Trinh AI, bạn đồng ý tuân thủ các điều khoản dưới đây.",
+    "sections": [
+      { "heading": "1. Tài khoản người dùng", "body": "Bạn chịu trách nhiệm bảo mật thông tin đăng nhập và mọi hoạt động diễn ra dưới tài khoản của mình. Vui lòng thông báo ngay cho chúng tôi nếu phát hiện truy cập trái phép." },
+      { "heading": "2. Nội dung khóa học", "body": "Nội dung khóa học, tài liệu, video thuộc bản quyền của Hung Trinh AI. Học viên được cấp quyền sử dụng cá nhân, không được sao chép, chia sẻ hoặc kinh doanh lại dưới mọi hình thức." },
+      { "heading": "3. Thanh toán và hoàn tiền", "body": "Học phí được thanh toán trước khi truy cập khóa học. Chính sách hoàn tiền (nếu có) sẽ được nêu rõ tại trang chi tiết từng khóa học hoặc webinar cụ thể." },
+      { "heading": "4. Trách nhiệm sử dụng", "body": "Bạn cam kết sử dụng website và dịch vụ đúng mục đích, không thực hiện hành vi gây hại đến hệ thống hoặc người dùng khác." },
+      { "heading": "5. Giới hạn trách nhiệm", "body": "Hung Trinh AI nỗ lực đảm bảo chất lượng dịch vụ nhưng không đảm bảo tuyệt đối không gián đoạn hoặc không có lỗi. Chúng tôi không chịu trách nhiệm cho các thiệt hại gián tiếp phát sinh từ việc sử dụng dịch vụ." },
+      { "heading": "6. Thay đổi điều khoản", "body": "Chúng tôi có thể cập nhật điều khoản này theo thời gian. Việc tiếp tục sử dụng dịch vụ sau khi thay đổi đồng nghĩa bạn chấp nhận điều khoản mới." },
+      { "heading": "7. Luật áp dụng", "body": "Các điều khoản này được điều chỉnh theo pháp luật Việt Nam." }
+    ]
+  },
+  "contact": {
+    "badge": "LIÊN HỆ",
+    "title": "Liên Hệ Với Chúng Tôi",
+    "subtitle": "Có câu hỏi về khóa học, webinar hoặc cần hỗ trợ? Đội ngũ Hung Trinh AI luôn sẵn sàng.",
+    "info_title": "Thông tin liên hệ",
+    "address_label": "Địa chỉ",
+    "email_label": "Email",
+    "phone_label": "Điện thoại",
+    "hours_label": "Giờ làm việc",
+    "zalo_title": "Cộng đồng Zalo",
+    "zalo_desc": "Tham gia nhóm Zalo để nhận hỗ trợ nhanh và cập nhật mới nhất từ Hung Trinh AI.",
+    "zalo_cta": "Tham gia nhóm Zalo",
+    "email_cta": "Gửi Email",
+    "call_cta": "Gọi ngay"
+  },
+  "faq": {
+    "badge": "HỎI ĐÁP",
+    "title": "Câu Hỏi Thường Gặp",
+    "subtitle": "Giải đáp nhanh những thắc mắc phổ biến về khóa học và dịch vụ của Hung Trinh AI.",
+    "items": [
+      { "q": "Tôi cần chuẩn bị gì trước khi tham gia khóa học?", "a": "Bạn chỉ cần một thiết bị có kết nối internet. Các khóa học được thiết kế phù hợp cho người mới bắt đầu, không yêu cầu kiến thức kỹ thuật trước đó." },
+      { "q": "Tôi có thể thanh toán bằng hình thức nào?", "a": "Chúng tôi hỗ trợ thanh toán chuyển khoản qua mã VietQR hiển thị trực tiếp trên trang thanh toán của từng khóa học/webinar." },
+      { "q": "Sau khi đăng ký, tôi truy cập khóa học ở đâu?", "a": "Sau khi thanh toán được xác nhận, khóa học sẽ xuất hiện trong mục 'Khóa học của tôi' tại trang Portal học viên." },
+      { "q": "Tôi có được hoàn tiền nếu không hài lòng không?", "a": "Chính sách hoàn tiền được quy định cụ thể theo từng khóa học/webinar, vui lòng xem chi tiết tại trang sản phẩm hoặc liên hệ trực tiếp để được hỗ trợ." },
+      { "q": "Tôi quên mật khẩu đăng nhập, phải làm sao?", "a": "Bạn có thể đăng nhập bằng Magic Link qua email tại trang đăng nhập, không cần nhớ mật khẩu." },
+      { "q": "Tôi cần hỗ trợ thêm thì liên hệ ở đâu?", "a": "Bạn có thể liên hệ qua email, số điện thoại tại trang Liên hệ, hoặc tham gia nhóm Zalo cộng đồng để được hỗ trợ nhanh nhất." }
+    ]
   }
 }
