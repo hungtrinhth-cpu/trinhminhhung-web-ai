@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-
-// Shared secret the payment gateway must present. Configure in env.
-const WEBHOOK_SECRET =
-  process.env.PAYMENT_WEBHOOK_SECRET || process.env.PAYOS_API_KEY || "";
+import { verifyPayosSignature } from "@/lib/payos";
 
 /**
  * Tolerant field extraction across PayOS / Casso / VietQR webhook shapes.
@@ -25,13 +22,9 @@ function extractPayment(body) {
 }
 
 export async function POST(request) {
-  // ── 1. Authenticate the webhook ──
-  const provided =
-    request.headers.get("x-webhook-secret") ||
-    new URL(request.url).searchParams.get("secret") ||
-    "";
-
-  if (!WEBHOOK_SECRET || provided !== WEBHOOK_SECRET) {
+  // ── 1. Verify the PayOS signature — fail closed if unconfigured ──
+  const checksumKey = process.env.PAYOS_CHECKSUM_KEY;
+  if (!checksumKey) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
@@ -40,6 +33,10 @@ export async function POST(request) {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+  }
+
+  if (!verifyPayosSignature(body?.data, body?.signature, checksumKey)) {
+    return NextResponse.json({ error: "invalid_signature" }, { status: 401 });
   }
 
   const { memo, amount } = extractPayment(body);
