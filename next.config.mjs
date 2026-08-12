@@ -1,10 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // isomorphic-dompurify's jsdom dependency has an ESM/CJS interop bug
-  // (html-encoding-sniffer -> @exodus/bytes) that only surfaces when
-  // Turbopack bundles it for the server — excluding it from bundling
-  // avoids the crash (it just runs as a normal Node require at runtime).
-  serverExternalPackages: ['isomorphic-dompurify', 'jsdom'],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
