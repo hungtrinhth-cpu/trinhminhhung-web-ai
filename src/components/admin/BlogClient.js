@@ -14,7 +14,7 @@ const LANG_LABEL = { vi: "VI", en: "EN" };
 
 function formatDate(d) {
   if (!d) return "—";
-  return new Date(d).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" });
+  return new Date(d).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short", timeZone: "Asia/Ho_Chi_Minh" });
 }
 
 export default function BlogClient({ initialPosts }) {

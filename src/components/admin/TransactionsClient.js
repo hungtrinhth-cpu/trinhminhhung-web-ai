@@ -14,7 +14,7 @@ const STATUS_STYLE = {
 
 function formatDateTime(d) {
   if (!d) return "—";
-  return new Date(d).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" });
+  return new Date(d).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short", timeZone: "Asia/Ho_Chi_Minh" });
 }
 
 function formatAmount(a) {
