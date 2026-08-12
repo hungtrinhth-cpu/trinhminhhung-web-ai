@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { notifyWebinarPaid } from '@/lib/notifications'
 
 const STATUS_LABEL = { pending: 'chờ xử lý', paid: 'đã thanh toán', failed: 'thất bại', expired: 'hết hạn' }
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -29,7 +30,7 @@ export async function markOrderPaid(orderId) {
 
   const { data: order, error: fetchErr } = await supabase
     .from('payment_orders')
-    .select('id, subscription_id, status')
+    .select('id, subscription_id, status, item_type, item_id, user_id')
     .eq('id', orderId)
     .single()
 
@@ -102,6 +103,8 @@ export async function markOrderPaid(orderId) {
       console.error('markOrderPaid: subscription update error', subErr.message)
     }
   }
+
+  await notifyWebinarPaid(supabase, order)
 
   revalidateTransactions()
   return { ok: true }

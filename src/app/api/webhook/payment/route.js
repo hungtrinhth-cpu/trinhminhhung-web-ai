@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyPayosSignature } from "@/lib/payos";
+import { notifyWebinarPaid } from "@/lib/notifications";
 
 /**
  * Tolerant field extraction across PayOS / Casso / VietQR webhook shapes.
@@ -49,7 +50,7 @@ export async function POST(request) {
   // ── 2. Find the matching pending order by order_code embedded in memo ──
   const { data: orders } = await supabase
     .from("payment_orders")
-    .select("id, subscription_id, order_code, amount, status")
+    .select("id, subscription_id, order_code, amount, status, item_type, item_id, user_id")
     .eq("status", "pending");
 
   const match = (orders ?? []).find((o) =>
@@ -84,6 +85,9 @@ export async function POST(request) {
       .update({ payment_status: "paid" })
       .eq("id", match.subscription_id);
   }
+
+  // ── 5. Email the Zoom link if this is a webinar purchase ──
+  await notifyWebinarPaid(supabase, match);
 
   return NextResponse.json({ ok: true, matched: true, order: match.order_code });
 }

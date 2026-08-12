@@ -39,6 +39,7 @@ const BLANK_FORM = {
   highlights: "",
   curriculum: "[]",
   status: "draft",
+  zoom_url: "",
 };
 
 function toDatetimeLocal(iso) {
@@ -69,6 +70,7 @@ function toFormState(webinar) {
     highlights: Array.isArray(webinar.highlights) ? webinar.highlights.join("\n") : "",
     curriculum: Array.isArray(webinar.curriculum) ? JSON.stringify(webinar.curriculum, null, 2) : "[]",
     status: webinar.status ?? "draft",
+    zoom_url: webinar.zoom_url ?? "",
   };
 }
 
@@ -149,6 +151,7 @@ export default function WebinarFormModal({ mode, webinar, onClose, onSaved }) {
       highlights,
       curriculum,
       status: form.status,
+      zoom_url: form.zoom_url.trim() || null,
     };
 
     setSaving(true);
@@ -353,6 +356,20 @@ export default function WebinarFormModal({ mode, webinar, onClose, onSaved }) {
               className={inputClass}
               placeholder="https://..."
             />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className={labelClass}>Link Zoom</label>
+            <input
+              type="text"
+              value={form.zoom_url}
+              onChange={(e) => set("zoom_url", e.target.value)}
+              className={inputClass}
+              placeholder="https://zoom.us/j/..."
+            />
+            <p className="text-xs text-slate-subtext/60">
+              Tự động gửi trong email cho học viên ngay khi đơn hàng chuyển sang “đã thanh toán”
+            </p>
           </div>
 
           <div className="space-y-1.5">

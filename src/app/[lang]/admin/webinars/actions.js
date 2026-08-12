@@ -12,7 +12,7 @@ const EDITABLE_FIELDS = [
   'title', 'slug', 'subtitle', 'instructor', 'instructor_title',
   'scheduled_at', 'duration_min', 'format', 'level',
   'price', 'original_price', 'seats_total', 'seats_left',
-  'thumbnail_url', 'tags', 'highlights', 'curriculum', 'status',
+  'thumbnail_url', 'tags', 'highlights', 'curriculum', 'status', 'zoom_url',
 ]
 
 function revalidateWebinars() {
