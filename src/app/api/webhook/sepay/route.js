@@ -33,8 +33,16 @@ export async function POST(request) {
 
   const transactionId = String(payload?.id ?? "").trim();
   const code = String(payload?.code ?? "").trim();
+  const content = String(payload?.content ?? "").trim();
   const transferType = payload?.transferType;
   const transferAmount = Number(payload?.transferAmount ?? 0);
+  // SePay's `code` is meant to be the already-isolated payment code, but in
+  // practice it can come through empty or with extra surrounding text (e.g.
+  // Sandbox Simulate transactions that don't match SePay's own recognized
+  // code pattern) — fall back to searching the raw transfer content too, and
+  // match by substring rather than exact equality, mirroring the PayOS
+  // webhook's tolerant matching for the same reason.
+  const matchText = `${code} ${content}`.toUpperCase();
 
   if (!transactionId) {
     return NextResponse.json({ success: false }, { status: 400 });
@@ -58,18 +66,18 @@ export async function POST(request) {
     return NextResponse.json({ success: false }, { status: 500 });
   }
 
-  // Only incoming transfers with a payment code can fulfil an order.
-  if (transferType !== "in" || !code) {
+  // Only incoming transfers with some payment reference can fulfil an order.
+  if (transferType !== "in" || !matchText.trim()) {
     return NextResponse.json({ success: true });
   }
 
-  // ── 3. Match the pending order by SePay's `code` field ──
+  // ── 3. Match the pending order by SePay's `code`/`content` field ──
   const { data: orders } = await supabase
     .from("payment_orders")
     .select("id, subscription_id, order_code, amount, status, item_type, item_id, user_id")
     .eq("status", "pending");
 
-  const match = (orders ?? []).find((o) => o.order_code.toUpperCase() === code.toUpperCase());
+  const match = (orders ?? []).find((o) => matchText.includes(o.order_code.toUpperCase()));
 
   if (!match) {
     // No matching order — ack so SePay stops retrying; nothing to flag,
