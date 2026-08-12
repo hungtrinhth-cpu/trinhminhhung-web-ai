@@ -2,6 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Badge from "@/components/ui/Badge";
 import Link from "next/link";
+import DOMPurify from "isomorphic-dompurify";
 import { getBlogPostBySlug } from "@/lib/queries/blog";
 
 export async function generateMetadata({ params }) {
@@ -55,7 +56,7 @@ export default async function BlogPostPage({ params }) {
 
               <div
                 className="prose prose-lg max-w-none font-body-lg text-slate-subtext leading-relaxed space-y-6"
-                dangerouslySetInnerHTML={{ __html: post.content ?? "" }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content ?? "") }}
               />
             </>
           ) : (

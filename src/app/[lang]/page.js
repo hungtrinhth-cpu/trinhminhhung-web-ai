@@ -3,6 +3,7 @@ import FooterComp from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";
 import AnimateIn from "@/components/ui/AnimateIn";
 import Image from "next/image";
+import DOMPurify from "isomorphic-dompurify";
 
 export default async function Home({ params }) {
   const { lang } = await params;
@@ -159,7 +160,7 @@ export default async function Home({ params }) {
                   </h2>
                   <div className="space-y-6">
                     <p className="font-body-lg text-slate-subtext leading-relaxed"
-                      dangerouslySetInnerHTML={{ __html: a.bio1 }}
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(a.bio1) }}
                     />
                     <p className="font-body-lg text-slate-subtext leading-relaxed">
                       {a.bio2}

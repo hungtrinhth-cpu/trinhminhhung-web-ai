@@ -11,6 +11,8 @@ export default function LeadMagnetPage({ params }) {
   const { lang } = use(params);
   const [dict, setDict] = useState(null);
   const [showZaloPopup, setShowZaloPopup] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   // Load dict
   if (!dict) {
@@ -18,10 +20,38 @@ export default function LeadMagnetPage({ params }) {
     return null;
   }
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setShowZaloPopup(true);
-  };
+    setError("");
+
+    const formData = new FormData(e.target);
+    const payload = {
+      name: formData.get("fullName")?.toString().trim() ?? "",
+      email: formData.get("email")?.toString().trim() ?? "",
+      phone: formData.get("phone")?.toString().trim() ?? "",
+      source: "Tài liệu: Bản đồ chuyển giao AI cho SME",
+    };
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/lead-magnet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data?.error || "Không gửi được, vui lòng thử lại sau.");
+        return;
+      }
+      e.target.reset();
+      setShowZaloPopup(true);
+    } catch {
+      setError("Không thể kết nối, vui lòng kiểm tra mạng và thử lại.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <>
@@ -88,9 +118,19 @@ export default function LeadMagnetPage({ params }) {
                   <label className="font-label-eyebrow text-label-eyebrow text-ink-text/50 uppercase">Email công việc</label>
                   <input className="w-full border-0 border-b border-border-subtle bg-transparent py-3 font-body-lg placeholder:text-ink-text/20 focus:outline-none focus:border-primary-container transition-all" placeholder="example@company.com" required type="email" name="email" />
                 </div>
+                {error && (
+                  <div className="text-error text-sm text-center bg-error/5 border border-error/20 rounded-lg py-2 px-3">
+                    {error}
+                  </div>
+                )}
+
                 <div className="pt-4">
-                  <button className="w-full bg-primary-container text-white py-5 rounded-full font-button-text text-button-text uppercase tracking-[0.2em] shadow-lg shadow-primary-container/20 hover:scale-[1.02] hover:shadow-xl active:scale-95 transition-all duration-300" type="submit">
-                    NHẬN TÀI LIỆU QUA EMAIL
+                  <button
+                    className="w-full bg-primary-container text-white py-5 rounded-full font-button-text text-button-text uppercase tracking-[0.2em] shadow-lg shadow-primary-container/20 hover:scale-[1.02] hover:shadow-xl active:scale-95 transition-all duration-300 disabled:opacity-60 disabled:hover:scale-100"
+                    type="submit"
+                    disabled={submitting}
+                  >
+                    {submitting ? "ĐANG GỬI..." : "NHẬN TÀI LIỆU QUA EMAIL"}
                   </button>
                 </div>
                 <div className="flex items-center justify-center gap-2 text-ink-text/40 font-body-md text-xs italic">
