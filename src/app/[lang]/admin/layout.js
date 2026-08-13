@@ -12,6 +12,7 @@ const sidebarItems = [
   { icon: "campaign", label: "Email Marketing & Chiến dịch", href: "/campaigns" },
   { icon: "article", label: "Quản lý nội dung", href: "/blog" },
   { icon: "school", label: "Quản lý khóa học", href: "/courses" },
+  { icon: "groups", label: "Học viên", href: "/hoc-vien" },
   { icon: "payments", label: "Giao dịch", href: "/transactions" },
 ];
 
