@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getSessionProfile } from "@/lib/queries/profiles";
-import { getAllEnrollments } from "@/lib/queries/enrollments";
+import { getAllEnrollments, getEnrollmentDashboardStats } from "@/lib/queries/enrollments";
 
 const STATUS_LABEL = { pending: "Chờ xử lý", paid: "Đã thanh toán", failed: "Thất bại" };
 const STATUS_STYLE = {
@@ -15,6 +15,14 @@ function formatDate(d) {
   return new Date(d).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short", timeZone: "Asia/Ho_Chi_Minh" });
 }
 
+// Manual grouping instead of toLocaleString("vi-VN") — avoids the same
+// server/browser ICU-data hydration mismatch class documented in
+// TransactionsClient.js's formatAmount().
+function formatVND(n) {
+  const v = Math.round(Number(n) || 0);
+  return `${v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`;
+}
+
 export default async function AdminStudentsPage({ params }) {
   const { lang } = await params;
   const { profile } = await getSessionProfile();
@@ -22,7 +30,7 @@ export default async function AdminStudentsPage({ params }) {
     redirect(`/${lang}/admin`);
   }
 
-  const enrollments = await getAllEnrollments();
+  const [enrollments, stats] = await Promise.all([getAllEnrollments(), getEnrollmentDashboardStats()]);
 
   return (
     <div className="space-y-8">
@@ -33,6 +41,57 @@ export default async function AdminStudentsPage({ params }) {
         <p className="font-body-md text-slate-subtext mt-1">
           Danh sách học viên đã đăng ký khóa học, trạng thái thanh toán và tiến độ học.
         </p>
+      </div>
+
+      {/* Summary KPIs */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+        {[
+          { label: "Tổng học viên (đã TT)", value: String(stats.totalStudents) },
+          { label: "Enrollment: Đã TT / Chờ / Thất bại", value: `${stats.byStatus.paid} / ${stats.byStatus.pending} / ${stats.byStatus.failed}` },
+          {
+            label: "Conversion checkout→paid",
+            value: stats.checkoutConversion.pct === null ? "—" : `${stats.checkoutConversion.pct}%`,
+            sub: `${stats.checkoutConversion.paidOrders}/${stats.checkoutConversion.totalOrders} đơn`,
+          },
+          { label: "Tiến độ học trung bình", value: stats.avgProgress === null ? "—" : `${stats.avgProgress}%` },
+        ].map((k) => (
+          <div key={k.label} className="glass-card rounded-xl p-4 sm:p-6 space-y-1">
+            <p className="font-label-eyebrow text-label-eyebrow text-slate-subtext/60 uppercase">{k.label}</p>
+            <p className="text-2xl font-black text-ink-text">{k.value}</p>
+            {k.sub && <p className="text-xs text-slate-subtext">{k.sub}</p>}
+          </div>
+        ))}
+      </div>
+
+      {/* Revenue by course */}
+      <div className="glass-card rounded-xl overflow-hidden">
+        <div className="p-6 border-b border-border-subtle">
+          <h3 className="font-headline-sub text-headline-sub text-ink-text">Doanh thu theo khóa học</h3>
+        </div>
+        {stats.revenueByCourse.length === 0 ? (
+          <p className="p-6 font-body-md text-slate-subtext/60 text-sm">Chưa có doanh thu.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border-subtle text-left text-slate-subtext text-xs uppercase tracking-wide">
+                  <th className="p-4 font-bold">Khóa học</th>
+                  <th className="p-4 font-bold">Học viên đã TT</th>
+                  <th className="p-4 font-bold">Doanh thu</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.revenueByCourse.map((c) => (
+                  <tr key={c.courseId} className="border-b border-border-subtle last:border-0">
+                    <td className="p-4 text-ink-text">{c.title}</td>
+                    <td className="p-4 text-slate-subtext">{c.paidCount}</td>
+                    <td className="p-4 text-ink-text font-bold">{formatVND(c.revenue)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       <div className="glass-card rounded-xl overflow-hidden">
