@@ -77,9 +77,14 @@ export default function QaCleanupModal({ onClose, onDone }) {
             </p>
 
             {preview.safe.length > 0 && (
-              <ul className="text-xs text-slate-subtext max-h-32 overflow-y-auto space-y-0.5 bg-mist-bg rounded-lg p-3">
+              <ul
+                data-testid="qa-cleanup-safe-list"
+                className="text-xs text-slate-subtext max-h-32 overflow-y-auto space-y-0.5 bg-mist-bg rounded-lg p-3"
+              >
                 {preview.safe.map((c) => (
-                  <li key={c.id}>{c.title}</li>
+                  <li key={c.id} data-testid="qa-cleanup-safe-item">
+                    {c.title}
+                  </li>
                 ))}
               </ul>
             )}
