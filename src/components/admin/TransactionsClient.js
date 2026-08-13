@@ -17,8 +17,15 @@ function formatDateTime(d) {
   return new Date(d).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short", timeZone: "Asia/Ho_Chi_Minh" });
 }
 
+// Manual grouping instead of Number.toLocaleString("vi-VN") — the thousands
+// separator toLocaleString produces depends on the JS engine's ICU/CLDR
+// data, which can differ between Vercel's server runtime and a real
+// visitor's browser (especially older/embedded ones), causing the same
+// class of hydration mismatch the timeZone fix above addressed for dates.
 function formatAmount(a) {
-  return Number(a ?? 0).toLocaleString("vi-VN") + "đ";
+  const n = Math.round(Number(a) || 0);
+  const sign = n < 0 ? "-" : "";
+  return `${sign}${Math.abs(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}đ`;
 }
 
 function formatMetadata(metadata) {
