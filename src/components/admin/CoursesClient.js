@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { updateCourse, updateLesson } from "@/app/[lang]/admin/courses/actions";
 import CourseFormModal from "./CourseFormModal";
 import LessonFormModal from "./LessonFormModal";
+import QaCleanupModal from "./QaCleanupModal";
 
 const STATUS_LABEL = { draft: "Nháp", published: "Đã đăng", closed: "Đã đóng" };
 const STATUS_STYLE = {
@@ -55,6 +56,8 @@ export default function CoursesClient({ initialCourses, initialLessons }) {
   const [lessonModalOpen, setLessonModalOpen] = useState(false);
   const [lessonModalMode, setLessonModalMode] = useState("create");
   const [editingLesson, setEditingLesson] = useState(null);
+
+  const [qaCleanupOpen, setQaCleanupOpen] = useState(false);
 
   const selectedCourse = courses.find((c) => c.id === selectedCourseId);
   const selectedLessons = useMemo(
@@ -126,14 +129,25 @@ export default function CoursesClient({ initialCourses, initialLessons }) {
             Tạo, sửa khóa học và bài học hiển thị trên trang public
           </p>
         </div>
-        <button
-          onClick={openCreateCourse}
-          disabled={isPending}
-          className="bg-primary-container text-white px-5 py-3 rounded-full font-button-text text-button-text uppercase tracking-wider shadow-lg shadow-primary-container/20 hover:scale-105 active:scale-95 transition-transform flex items-center justify-center gap-2 disabled:opacity-60"
-        >
-          <span className="material-symbols-outlined text-base">add</span>
-          Tạo khóa học mới
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setQaCleanupOpen(true)}
+            disabled={isPending}
+            className="border border-outline-variant text-slate-subtext px-4 py-3 rounded-full font-button-text text-button-text hover:bg-mist-bg transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+            title="Xoá các khóa học QA_TEST_ còn tồn đọng từ quá trình QA"
+          >
+            <span className="material-symbols-outlined text-base">mop</span>
+            Dọn dữ liệu QA_TEST_
+          </button>
+          <button
+            onClick={openCreateCourse}
+            disabled={isPending}
+            className="bg-primary-container text-white px-5 py-3 rounded-full font-button-text text-button-text uppercase tracking-wider shadow-lg shadow-primary-container/20 hover:scale-105 active:scale-95 transition-transform flex items-center justify-center gap-2 disabled:opacity-60"
+          >
+            <span className="material-symbols-outlined text-base">add</span>
+            Tạo khóa học mới
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 items-start">
@@ -310,6 +324,10 @@ export default function CoursesClient({ initialCourses, initialLessons }) {
           onClose={() => setLessonModalOpen(false)}
           onSaved={handleLessonSaved}
         />
+      )}
+
+      {qaCleanupOpen && (
+        <QaCleanupModal onClose={() => setQaCleanupOpen(false)} onDone={refresh} />
       )}
     </div>
   );

@@ -17,6 +17,8 @@ const LESSON_EDITABLE_FIELDS = [
   'title', 'description', 'video_url', 'attachment_url', 'duration_sec', 'order', 'is_preview',
 ]
 
+const QA_TEST_PREFIX = 'QA_TEST_'
+
 function revalidateCourses() {
   revalidatePath('/[lang]/admin/courses', 'page')
   revalidatePath('/[lang]/khoa-hoc/[slug]', 'page')
@@ -147,4 +149,74 @@ export async function updateLesson(id, fields) {
   }
   revalidateCourses()
   return { ok: true }
+}
+
+/**
+ * Finds QA_TEST_-prefixed, never-published courses, then checks each for
+ * real payment_orders/subscriptions attached (item_type/item_id has no FK
+ * constraint, so deleting a course wouldn't cascade-clean those — they'd
+ * become orphaned references). Courses with anything attached are excluded
+ * from "safe" and reported as "blocked" for manual review instead of being
+ * force-deleted.
+ */
+async function findQaTestCleanupCandidates(supabase) {
+  const { data: courses, error } = await supabase
+    .from('courses')
+    .select('id, title, status')
+    .like('title', `${QA_TEST_PREFIX}%`)
+    .neq('status', 'published')
+
+  if (error) return { error: error.message }
+  if (!courses || courses.length === 0) return { safe: [], blocked: [] }
+
+  const courseIds = courses.map((c) => c.id)
+  const [{ data: orders }, { data: subs }] = await Promise.all([
+    supabase.from('payment_orders').select('item_id').eq('item_type', 'course').in('item_id', courseIds),
+    supabase.from('subscriptions').select('item_id').eq('item_type', 'course').in('item_id', courseIds),
+  ])
+  const blockedIds = new Set([...(orders ?? []).map((o) => o.item_id), ...(subs ?? []).map((s) => s.item_id)])
+
+  return {
+    safe: courses.filter((c) => !blockedIds.has(c.id)),
+    blocked: courses.filter((c) => blockedIds.has(c.id)),
+  }
+}
+
+/**
+ * Preview only — never deletes anything. Lets the admin UI show counts
+ * before the admin confirms.
+ */
+export async function previewQaTestCourseCleanup() {
+  const supabase = await createClient()
+  const result = await findQaTestCleanupCandidates(supabase)
+  if (result.error) return { error: result.error }
+  return { ok: true, safe: result.safe, blocked: result.blocked }
+}
+
+/**
+ * Deletes only the courses confirmed safe by findQaTestCleanupCandidates,
+ * re-running that same check immediately before deleting (rather than
+ * trusting a possibly-stale client-side preview) so a course that gained a
+ * real order/subscription in between stays protected. Lessons/lesson_progress
+ * cascade-delete automatically via their FK constraints.
+ */
+export async function runQaTestCourseCleanup() {
+  const supabase = await createClient()
+  const result = await findQaTestCleanupCandidates(supabase)
+  if (result.error) return { error: result.error }
+
+  const idsToDelete = result.safe.map((c) => c.id)
+  if (idsToDelete.length === 0) {
+    return { ok: true, deletedCount: 0, blocked: result.blocked }
+  }
+
+  const { error, count } = await supabase
+    .from('courses')
+    .delete({ count: 'exact' })
+    .in('id', idsToDelete)
+
+  if (error) return { error: error.message }
+
+  revalidateCourses()
+  return { ok: true, deletedCount: count ?? idsToDelete.length, blocked: result.blocked }
 }
