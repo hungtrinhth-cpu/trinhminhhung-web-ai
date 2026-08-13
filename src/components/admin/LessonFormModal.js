@@ -7,6 +7,7 @@ const BLANK_FORM = {
   title: "",
   description: "",
   video_url: "",
+  attachment_url: "",
   duration_sec: "",
   order: "",
   is_preview: false,
@@ -18,6 +19,7 @@ function toFormState(lesson) {
     title: lesson.title ?? "",
     description: lesson.description ?? "",
     video_url: lesson.video_url ?? "",
+    attachment_url: lesson.attachment_url ?? "",
     duration_sec: lesson.duration_sec ?? "",
     order: lesson.order ?? "",
     is_preview: !!lesson.is_preview,
@@ -60,6 +62,7 @@ export default function LessonFormModal({ mode, courseId, lesson, siblingLessons
       title: form.title.trim(),
       description: form.description.trim() || null,
       video_url: form.video_url.trim() || null,
+      attachment_url: form.attachment_url.trim() || null,
       duration_sec: form.duration_sec !== "" ? Number(form.duration_sec) : null,
       order: form.order !== "" ? Number(form.order) : 0,
       is_preview: form.is_preview,
@@ -136,6 +139,17 @@ export default function LessonFormModal({ mode, courseId, lesson, siblingLessons
               onChange={(e) => set("video_url", e.target.value)}
               className={inputClass}
               placeholder="https://www.youtube.com/embed/xxx"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className={labelClass}>Link tài liệu (PDF, Google Drive...)</label>
+            <input
+              type="text"
+              value={form.attachment_url}
+              onChange={(e) => set("attachment_url", e.target.value)}
+              className={inputClass}
+              placeholder="https://drive.google.com/..."
             />
           </div>
 

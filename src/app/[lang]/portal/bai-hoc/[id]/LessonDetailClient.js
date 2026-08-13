@@ -163,10 +163,26 @@ export default function LessonDetailClient({ lessons, activeLessonId }) {
               <span className="material-symbols-outlined text-sm">check</span>
               {isCurrentCompleted ? "Đã hoàn thành" : marking ? "Đang lưu..." : "Đánh dấu hoàn thành"}
             </button>
-            <button className="border border-outline-variant text-ink-text px-5 py-2.5 rounded-full font-button-text text-button-text text-sm hover:bg-mist-bg transition-colors flex items-center gap-2">
-              <span className="material-symbols-outlined text-sm">download</span>
-              Tài liệu
-            </button>
+            {currentLesson?.attachment_url ? (
+              <a
+                href={currentLesson.attachment_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-outline-variant text-ink-text px-5 py-2.5 rounded-full font-button-text text-button-text text-sm hover:bg-mist-bg transition-colors flex items-center gap-2"
+              >
+                <span className="material-symbols-outlined text-sm">download</span>
+                Tài liệu
+              </a>
+            ) : (
+              <button
+                disabled
+                title="Chưa có tài liệu cho bài học này"
+                className="border border-outline-variant text-ink-text/40 px-5 py-2.5 rounded-full font-button-text text-button-text text-sm flex items-center gap-2 cursor-not-allowed"
+              >
+                <span className="material-symbols-outlined text-sm">download</span>
+                Tài liệu
+              </button>
+            )}
           </div>
         </div>
 

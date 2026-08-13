@@ -39,7 +39,7 @@ export async function getLessons(courseId) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("lessons")
-    .select("id, course_id, title, description, video_url, duration_sec, order, is_preview")
+    .select("id, course_id, title, description, video_url, attachment_url, duration_sec, order, is_preview")
     .eq("course_id", courseId)
     .order("order", { ascending: true });
   if (error) {

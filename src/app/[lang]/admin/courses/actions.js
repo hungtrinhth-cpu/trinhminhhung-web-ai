@@ -14,7 +14,7 @@ const COURSE_EDITABLE_FIELDS = [
 ]
 
 const LESSON_EDITABLE_FIELDS = [
-  'title', 'description', 'video_url', 'duration_sec', 'order', 'is_preview',
+  'title', 'description', 'video_url', 'attachment_url', 'duration_sec', 'order', 'is_preview',
 ]
 
 function revalidateCourses() {
