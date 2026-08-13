@@ -14,6 +14,13 @@ export default async function PortalHome({ params }) {
   const certificates = courses.filter((c) => c.progress === 100).length;
   const firstName = profile?.full_name?.split(" ").slice(-1)[0] ?? "";
 
+  // Course to feature in "Tiếp tục học": the in-progress (not finished,
+  // has lessons) course with the most recent activity — completing a
+  // lesson, or enrollment date if nothing's been completed yet.
+  const continueCourse = courses
+    .filter((c) => c.lessonsCount > 0 && c.progress < 100)
+    .sort((a, b) => (b.lastActivityAt ?? "").localeCompare(a.lastActivityAt ?? ""))[0];
+
   return (
     <div className="space-y-8">
       {/* Welcome */}
@@ -27,6 +34,46 @@ export default async function PortalHome({ params }) {
             : "Bạn chưa đăng ký khóa học nào. Khám phá các khóa học để bắt đầu."}
         </p>
       </div>
+
+      {/* Continue Learning hero */}
+      {continueCourse && (
+        <div className="section-blue-banner rounded-xl p-6 md:p-8 text-pure-white">
+          <p className="font-label-eyebrow text-label-eyebrow uppercase tracking-widest text-white/70 mb-2">
+            Tiếp tục học
+          </p>
+          <h2 className="font-headline-sub text-headline-sub mb-1">{continueCourse.title}</h2>
+          {continueCourse.nextLessonTitle && (
+            <p className="font-body-md text-white/80 mb-4">{continueCourse.nextLessonTitle}</p>
+          )}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex justify-between mb-1.5 text-xs">
+                <span className="text-white/70">
+                  {continueCourse.completedCount}/{continueCourse.lessonsCount} bài
+                </span>
+                <span className="font-bold">{continueCourse.progress}%</span>
+              </div>
+              <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-white rounded-full transition-all duration-500"
+                  style={{ width: `${continueCourse.progress}%` }}
+                />
+              </div>
+            </div>
+            <Link
+              href={
+                continueCourse.nextLessonId
+                  ? `/${lang}/portal/bai-hoc/${continueCourse.nextLessonId}`
+                  : `/${lang}/khoa-hoc/${continueCourse.slug}`
+              }
+              className="shrink-0 inline-flex items-center justify-center gap-2 bg-visun-orange text-white px-6 py-3 rounded-full font-button-text text-button-text text-sm hover:scale-105 hover:bg-sunset transition-all active:scale-95"
+            >
+              Tiếp tục học
+              <span className="material-symbols-outlined text-base">arrow_forward</span>
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter">

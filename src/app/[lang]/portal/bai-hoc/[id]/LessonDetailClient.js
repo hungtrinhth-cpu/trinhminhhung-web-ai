@@ -37,6 +37,7 @@ export default function LessonDetailClient({ lessons, activeLessonId }) {
   const currentLesson = lessons[activeIndex] ?? lessons[0];
   const answerIndex = chatMessages.filter((m) => m.role === "bot").length % MOCK_ANSWERS.length;
   const isCurrentCompleted = currentLesson && completedIds.has(currentLesson.id);
+  const courseProgress = lessons.length > 0 ? Math.round((completedIds.size / lessons.length) * 100) : 0;
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -217,6 +218,22 @@ export default function LessonDetailClient({ lessons, activeLessonId }) {
                 <span className="hidden sm:inline">{tab.labelFull}</span>
               </button>
             ))}
+          </div>
+
+          {/* Overall course progress — always visible regardless of active tab */}
+          <div className="px-4 py-3 border-b border-border-subtle shrink-0">
+            <div className="flex justify-between mb-1.5 text-xs">
+              <span className="text-slate-subtext">
+                {completedIds.size}/{lessons.length} bài
+              </span>
+              <span className="font-bold text-primary-container">{courseProgress}%</span>
+            </div>
+            <div className="w-full h-1.5 bg-mist-bg rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary-container rounded-full transition-all duration-500"
+                style={{ width: `${courseProgress}%` }}
+              />
+            </div>
           </div>
 
           {/* Tab: Lesson List */}
