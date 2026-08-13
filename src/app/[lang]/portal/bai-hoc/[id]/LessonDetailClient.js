@@ -49,13 +49,19 @@ export default function LessonDetailClient({ lessons, activeLessonId }) {
     setChatInput("");
   };
 
-  async function handleMarkComplete() {
-    if (!currentLesson || marking || isCurrentCompleted) return;
+  async function handleToggleComplete() {
+    if (!currentLesson || marking) return;
+    const nextCompleted = !isCurrentCompleted;
     setMarking(true);
-    const res = await setLessonProgress(currentLesson.id, true);
+    const res = await setLessonProgress(currentLesson.id, nextCompleted);
     setMarking(false);
     if (!res?.error) {
-      setCompletedIds((prev) => new Set(prev).add(currentLesson.id));
+      setCompletedIds((prev) => {
+        const next = new Set(prev);
+        if (nextCompleted) next.add(currentLesson.id);
+        else next.delete(currentLesson.id);
+        return next;
+      });
       startTransition(() => router.refresh());
     }
   }
@@ -156,12 +162,15 @@ export default function LessonDetailClient({ lessons, activeLessonId }) {
           {/* Actions — flex-wrap so buttons stack on very narrow screens */}
           <div className="flex flex-wrap gap-3">
             <button
-              onClick={handleMarkComplete}
-              disabled={marking || isCurrentCompleted}
-              className="bg-primary-container text-white px-5 py-2.5 rounded-full font-button-text text-button-text text-sm hover:scale-105 transition-transform flex items-center gap-2 disabled:opacity-60 disabled:hover:scale-100"
+              onClick={handleToggleComplete}
+              disabled={marking}
+              title={isCurrentCompleted ? "Nhấn để bỏ đánh dấu hoàn thành" : "Đánh dấu bài học đã hoàn thành"}
+              className={`px-5 py-2.5 rounded-full font-button-text text-button-text text-sm hover:scale-105 transition-transform flex items-center gap-2 disabled:opacity-60 disabled:hover:scale-100 ${
+                isCurrentCompleted ? "bg-green-600 text-white" : "bg-primary-container text-white"
+              }`}
             >
-              <span className="material-symbols-outlined text-sm">check</span>
-              {isCurrentCompleted ? "Đã hoàn thành" : marking ? "Đang lưu..." : "Đánh dấu hoàn thành"}
+              <span className="material-symbols-outlined text-sm">{isCurrentCompleted ? "check_circle" : "check"}</span>
+              {marking ? "Đang lưu..." : isCurrentCompleted ? "Đã hoàn thành" : "Đánh dấu hoàn thành"}
             </button>
             {currentLesson?.attachment_url ? (
               <a
