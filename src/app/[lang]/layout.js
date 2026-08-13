@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import "../globals.css";
+import ClientErrorReporter from "@/components/ClientErrorReporter";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -22,6 +23,7 @@ export default async function RootLayout({ children, params }) {
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" precedence="default" />
       </head>
       <body className="min-h-full flex flex-col font-body-lg text-ink-text bg-mist-bg">
+        <ClientErrorReporter />
         {children}
       </body>
     </html>

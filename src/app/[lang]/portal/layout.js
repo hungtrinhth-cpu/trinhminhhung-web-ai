@@ -7,8 +7,8 @@ import { usePathname, useParams } from "next/navigation";
 const sidebarItems = [
   { icon: "dashboard", label: "Tổng quan", href: "" },
   { icon: "school", label: "Khóa học của tôi", href: "/khoa-hoc" },
-  { icon: "smart_toy", label: "AI Trợ giảng", href: "/ai-chat" },
-  { icon: "emoji_events", label: "Chứng chỉ", href: "/chung-chi" },
+  { icon: "smart_toy", label: "AI Trợ giảng", href: "/ai-chat", disabled: true },
+  { icon: "emoji_events", label: "Chứng chỉ", href: "/chung-chi", disabled: true },
   { icon: "settings", label: "Cài đặt", href: "/cai-dat" },
 ];
 
@@ -31,6 +31,19 @@ export default function PortalLayout({ children }) {
 
         <nav className="flex flex-col gap-1 p-4 flex-1">
           {sidebarItems.map((item) => {
+            if (item.disabled) {
+              return (
+                <div
+                  key={item.label}
+                  title="Sắp ra mắt"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl font-body-md text-slate-subtext/40 cursor-not-allowed"
+                >
+                  <span className="material-symbols-outlined text-xl">{item.icon}</span>
+                  {item.label}
+                  <span className="ml-auto text-[10px] font-bold uppercase tracking-wide">Sắp ra mắt</span>
+                </div>
+              );
+            }
             const href = `/${lang}/portal${item.href}`;
             const isActive = pathname === href || (item.href === "" && pathname === `/${lang}/portal`);
             return (
@@ -103,6 +116,19 @@ export default function PortalLayout({ children }) {
 
             <nav className="flex flex-col gap-1 p-4 flex-1">
               {sidebarItems.map((item) => {
+                if (item.disabled) {
+                  return (
+                    <div
+                      key={item.label}
+                      title="Sắp ra mắt"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl font-body-md text-slate-subtext/40 cursor-not-allowed"
+                    >
+                      <span className="material-symbols-outlined text-xl">{item.icon}</span>
+                      {item.label}
+                      <span className="ml-auto text-[10px] font-bold uppercase tracking-wide">Sắp ra mắt</span>
+                    </div>
+                  );
+                }
                 const href = `/${lang}/portal${item.href}`;
                 const isActive = pathname === href || (item.href === "" && pathname === `/${lang}/portal`);
                 return (
@@ -173,6 +199,19 @@ export default function PortalLayout({ children }) {
       {/* ── Mobile Bottom Navigation ── */}
       <nav className="flex md:hidden fixed bottom-0 inset-x-0 z-50 bg-pure-white border-t border-border-subtle safe-area-pb">
         {sidebarItems.map((item) => {
+          if (item.disabled) {
+            return (
+              <div
+                key={item.label}
+                className="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 text-slate-subtext/30"
+              >
+                <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
+                <span className="text-[9px] font-bold uppercase leading-tight text-center px-0.5 line-clamp-1">
+                  {item.label}
+                </span>
+              </div>
+            );
+          }
           const href = `/${lang}/portal${item.href}`;
           const isActive = pathname === href || (item.href === "" && pathname === `/${lang}/portal`);
           return (
