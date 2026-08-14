@@ -72,11 +72,23 @@ export async function POST(request) {
 
   const now = new Date().toISOString();
 
-  // ── 3. Mark the order paid ──
-  await supabase
+  // ── 3. Mark the order paid — conditioned on it still being "pending" and
+  // checking the affected row count. PayOS has no transaction-id dedup table
+  // (unlike the SePay route's sepay_webhook_events), so a retried/duplicate
+  // delivery — or a race against another webhook call for the same order —
+  // must be caught here: only the call that actually wins the pending→paid
+  // transition proceeds to grant access / send the Zoom email. A losing call
+  // (0 rows affected) means someone else already completed this order. ──
+  const { data: updatedOrders } = await supabase
     .from("payment_orders")
     .update({ status: "paid", paid_at: now, webhook_payload: body, updated_at: now })
-    .eq("id", match.id);
+    .eq("id", match.id)
+    .eq("status", "pending")
+    .select("id");
+
+  if (!updatedOrders || updatedOrders.length === 0) {
+    return NextResponse.json({ ok: true, matched: true, alreadyProcessed: true, order: match.order_code });
+  }
 
   // ── 4. Mark the subscription paid (DB trigger decrements webinar seats) ──
   if (match.subscription_id) {
