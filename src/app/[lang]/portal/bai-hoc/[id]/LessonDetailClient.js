@@ -202,7 +202,10 @@ export default function LessonDetailClient({ lessons, activeLessonId }) {
           <div className="flex border-b border-border-subtle shrink-0">
             {[
               { id: "content", labelFull: "NỘI DUNG KHÓA HỌC", labelShort: "NỘI DUNG" },
-              { id: "ai", labelFull: "TRỢ LÝ AI HỌC TẬP", labelShort: "TRỢ LÝ AI" },
+              // "ai" tab intentionally omitted — its chat UI below only ever
+              // answers from a hard-coded MOCK_ANSWERS array, no real AI API.
+              // Kept unreachable rather than deleted so a real integration
+              // can wire it back up later without rebuilding the UI.
             ].map((tab) => (
               <button
                 key={tab.id}
